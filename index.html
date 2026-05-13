@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>出席登記</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #FF6B00; --orange-light: #FF8C35;
+    --bg: #FFF8F3; --surface: #FFFFFF;
+    --text: #1A1208; --muted: #9E7B5A; --border: #F0DECE;
+    --green: #2ECC71; --blue: #3B82F6; --blue-light: #60A5FA;
+    --am: #FF6B00; --pm: #7C3AED;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Noto Sans TC', sans-serif; background: var(--bg);
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 20px 16px; overflow-x: hidden;
+  }
+  body::before { content: ''; position: fixed; top: -100px; right: -100px; width: 380px; height: 380px; border-radius: 50%; background: radial-gradient(circle, rgba(255,107,0,0.1), transparent 70%); pointer-events: none; }
+  body::after { content: ''; position: fixed; bottom: -80px; left: -80px; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, rgba(124,58,237,0.07), transparent 70%); pointer-events: none; }
+
+  .card {
+    background: var(--surface); border-radius: 26px; padding: 32px 26px;
+    width: 100%; max-width: 420px;
+    box-shadow: 0 4px 6px rgba(255,107,0,0.05), 0 20px 60px rgba(180,80,0,0.1);
+    position: relative; z-index: 1;
+    animation: cardIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both;
+  }
+  @keyframes cardIn { from{opacity:0;transform:translateY(28px) scale(0.96)} to{opacity:1;transform:none} }
+  .card::before { content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 4px; background: linear-gradient(90deg, var(--orange), var(--orange-light)); border-radius: 0 0 4px 4px; }
+
+  .logo-wrap { display: flex; justify-content: center; margin-bottom: 18px; }
+  .logo-badge { width: 62px; height: 62px; background: linear-gradient(135deg, var(--orange), var(--orange-light)); border-radius: 17px; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 8px 24px rgba(255,107,0,0.32); animation: pulse 3s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{box-shadow:0 8px 24px rgba(255,107,0,0.32)} 50%{box-shadow:0 8px 34px rgba(255,107,0,0.52)} }
+
+  h1 { font-size: 22px; font-weight: 900; color: var(--text); text-align: center; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .sub { font-size: 12px; color: var(--muted); text-align: center; margin-bottom: 24px; }
+
+  .sec-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+  .req { color: var(--orange); font-size: 14px; }
+
+  /* Action */
+  .two-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 18px; }
+  .opt-btn { padding: 13px 8px; border-radius: 13px; border: 2px solid var(--border); background: var(--bg); cursor: pointer; text-align: center; transition: all 0.17s; font-family: 'Noto Sans TC', sans-serif; }
+  .opt-btn .ob-icon { font-size: 20px; display: block; margin-bottom: 3px; }
+  .opt-btn .ob-label { font-size: 14px; font-weight: 700; color: var(--muted); }
+  .opt-btn.sel-in { border-color: var(--orange); background: rgba(255,107,0,0.06); box-shadow: 0 0 0 3px rgba(255,107,0,0.1); }
+  .opt-btn.sel-in .ob-label { color: var(--orange); }
+  .opt-btn.sel-out { border-color: var(--blue); background: rgba(59,130,246,0.06); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+  .opt-btn.sel-out .ob-label { color: var(--blue); }
+
+  /* Session AM/PM */
+  .opt-btn.sel-am { border-color: var(--am); background: rgba(255,107,0,0.06); box-shadow: 0 0 0 3px rgba(255,107,0,0.1); }
+  .opt-btn.sel-am .ob-label { color: var(--am); }
+  .opt-btn.sel-pm { border-color: var(--pm); background: rgba(124,58,237,0.06); box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+  .opt-btn.sel-pm .ob-label { color: var(--pm); }
+
+  /* School 5 buttons */
+  .school-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; }
+  .school-btn { padding: 11px 8px; border-radius: 12px; border: 2px solid var(--border); background: var(--bg); cursor: pointer; text-align: center; transition: all 0.17s; font-family: 'Noto Sans TC', sans-serif; }
+  .school-btn .sb-icon { font-size: 18px; display: block; margin-bottom: 3px; }
+  .school-btn .sb-name { font-size: 11px; font-weight: 700; color: var(--muted); line-height: 1.4; }
+  .school-btn.selected { border-color: var(--orange); background: rgba(255,107,0,0.07); box-shadow: 0 0 0 3px rgba(255,107,0,0.1); }
+  .school-btn.selected .sb-name { color: var(--orange); }
+  .school-btn.span2 { grid-column: span 2; }
+
+  /* Name input */
+  input[type="text"] {
+    width: 100%; padding: 14px 16px; font-size: 16px;
+    font-family: 'Noto Sans TC', sans-serif; font-weight: 500;
+    color: var(--text); background: var(--bg);
+    border: 2px solid var(--border); border-radius: 13px;
+    outline: none; transition: all 0.2s; margin-bottom: 6px;
+  }
+  input[type="text"]:focus { border-color: var(--orange); background: #fff; box-shadow: 0 0 0 4px rgba(255,107,0,0.09); }
+  input[type="text"].blue-focus:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(59,130,246,0.09); }
+  input[type="text"]::placeholder { color: #C9A98A; font-weight: 400; }
+
+  .err { font-size: 11px; color: #E74C3C; margin-bottom: 10px; display: none; padding-left: 2px; }
+
+  .btn-submit {
+    width: 100%; padding: 16px; font-size: 15px; font-weight: 700;
+    font-family: 'Noto Sans TC', sans-serif; color: #fff; border: none;
+    border-radius: 13px; cursor: pointer; transition: all 0.2s;
+    position: relative; overflow: hidden; margin-top: 6px;
+  }
+  .mode-in { background: linear-gradient(135deg, var(--orange), var(--orange-light)); box-shadow: 0 6px 18px rgba(255,107,0,0.36); }
+  .mode-out { background: linear-gradient(135deg, var(--blue), var(--blue-light)); box-shadow: 0 6px 18px rgba(59,130,246,0.36); }
+  .btn-submit:hover { transform: translateY(-2px); }
+  .btn-submit:active { transform: none; }
+  .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .btn-submit.loading .btn-text { opacity: 0; }
+  .spinner { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
+  .btn-submit.loading .spinner { opacity: 1; }
+  .ring { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+
+  /* Shake */
+  .shake { animation: shake 0.38s ease; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-5px)} 40%,80%{transform:translateX(5px)} }
+
+  /* Success */
+  .success-screen { display: none; text-align: center; animation: pop 0.45s cubic-bezier(0.34,1.4,0.64,1) both; }
+  @keyframes pop { from{opacity:0;transform:scale(0.82)} to{opacity:1;transform:scale(1)} }
+  .suc-icon { width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 34px; margin: 0 auto 16px; }
+  .suc-icon.in { background: linear-gradient(135deg, var(--orange), var(--orange-light)); box-shadow: 0 8px 26px rgba(255,107,0,0.38); }
+  .suc-icon.out { background: linear-gradient(135deg, var(--blue), var(--blue-light)); box-shadow: 0 8px 26px rgba(59,130,246,0.38); }
+  .suc-title { font-size: 24px; font-weight: 900; color: var(--text); margin-bottom: 5px; }
+  .suc-name { font-size: 18px; font-weight: 700; margin-bottom: 3px; }
+  .suc-name.in { color: var(--orange); } .suc-name.out { color: var(--blue); }
+  .suc-meta { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .suc-time { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); margin-top: 14px; padding: 7px 16px; background: var(--bg); border-radius: 30px; display: inline-block; }
+  .suc-msg { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .btn-back { margin-top: 16px; padding: 10px 24px; border: 2px solid var(--border); background: none; border-radius: 11px; font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all 0.2s; }
+  .btn-back:hover { border-color: var(--orange); color: var(--orange); }
+
+  .divider { height: 1px; background: var(--border); margin: 14px 0; }
+  .footer { margin-top: 20px; font-size: 10px; color: #C9A98A; text-align: center; font-family: 'DM Mono', monospace; position: relative; z-index: 1; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div id="form-screen">
+    <div class="logo-wrap"><div class="logo-badge">✍️</div></div>
+    <h1>出席登記</h1>
+    <p class="sub">請完整填寫以下資訊</p>
+
+    <!-- 簽到/簽退 -->
+    <div class="sec-label"><span class="req">●</span> 動作</div>
+    <div class="two-grid" style="margin-bottom:18px">
+      <div class="opt-btn sel-in" id="act-in" onclick="setAction('in')">
+        <span class="ob-icon">🟢</span><span class="ob-label">簽到</span>
+      </div>
+      <div class="opt-btn" id="act-out" onclick="setAction('out')">
+        <span class="ob-icon">🔵</span><span class="ob-label">簽退</span>
+      </div>
+    </div>
+
+    <!-- 上/下午場 -->
+    <div class="sec-label"><span class="req">●</span> 場次</div>
+    <div class="two-grid" id="session-grid">
+      <div class="opt-btn" id="ses-am" onclick="setSession('am')">
+        <span class="ob-icon">🌅</span><span class="ob-label">上午場</span>
+      </div>
+      <div class="opt-btn" id="ses-pm" onclick="setSession('pm')">
+        <span class="ob-icon">🌆</span><span class="ob-label">下午場</span>
+      </div>
+    </div>
+    <div class="err" id="err-session">請選擇場次</div>
+
+    <!-- 學校 -->
+    <div class="sec-label"><span class="req">●</span> 學校</div>
+    <div class="school-grid" id="school-grid">
+      <div class="school-btn" onclick="selectSchool(this,'中山大學')"><span class="sb-icon">🏫</span><span class="sb-name">中山大學</span></div>
+      <div class="school-btn" onclick="selectSchool(this,'臺南大學')"><span class="sb-icon">🏫</span><span class="sb-name">臺南大學</span></div>
+      <div class="school-btn" onclick="selectSchool(this,'嘉義大學')"><span class="sb-icon">🏫</span><span class="sb-name">嘉義大學</span></div>
+      <div class="school-btn" onclick="selectSchool(this,'靜宜大學')"><span class="sb-icon">🏫</span><span class="sb-name">靜宜大學</span></div>
+      <div class="school-btn span2" onclick="selectSchool(this,'淡江大學')"><span class="sb-icon">🏫</span><span class="sb-name">淡江大學</span></div>
+    </div>
+    <div class="err" id="err-school">請選擇學校</div>
+
+    <!-- 姓名 -->
+    <div class="sec-label"><span class="req">●</span> 姓名</div>
+    <input type="text" id="name-input" placeholder="例：王小明" autocomplete="name" autocorrect="off" maxlength="20">
+    <div class="err" id="err-name">請輸入姓名</div>
+
+    <button class="btn-submit mode-in" id="submit-btn" onclick="submit()">
+      <span class="btn-text" id="btn-text">確認簽到 →</span>
+      <span class="spinner"><span class="ring"></span></span>
+    </button>
+  </div>
+
+  <div class="success-screen" id="success-screen">
+    <div class="suc-icon" id="suc-icon"></div>
+    <div class="suc-title" id="suc-title"></div>
+    <div class="suc-name" id="suc-name"></div>
+    <div class="suc-meta" id="suc-meta"></div>
+    <div class="suc-msg" id="suc-msg"></div>
+    <div class="suc-time" id="suc-time"></div>
+    <br>
+    <button class="btn-back" onclick="reset()">← 返回再次登記</button>
+  </div>
+</div>
+<div class="footer">出席登記系統 · 如有問題請洽主辦方</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbxw6kOmdPe42hQZ2pzJMfKj--0Qx454enrhzOtu-Cfl8VqziHoxKn62BeGRk59ct5_h/exec';
+let action = 'in', session = '', school = '';
+
+function setAction(a) {
+  action = a;
+  document.getElementById('act-in').className = 'opt-btn' + (a==='in'?' sel-in':'');
+  document.getElementById('act-out').className = 'opt-btn' + (a==='out'?' sel-out':'');
+  document.getElementById('submit-btn').className = 'btn-submit ' + (a==='in'?'mode-in':'mode-out');
+  document.getElementById('btn-text').textContent = a==='in'?'確認簽到 →':'確認簽退 →';
+  document.getElementById('name-input').className = a==='out'?'blue-focus':'';
+}
+
+function setSession(s) {
+  session = s;
+  document.getElementById('ses-am').className = 'opt-btn' + (s==='am'?' sel-am':'');
+  document.getElementById('ses-pm').className = 'opt-btn' + (s==='pm'?' sel-pm':'');
+  document.getElementById('err-session').style.display = 'none';
+}
+
+function selectSchool(el, name) {
+  document.querySelectorAll('.school-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  school = name;
+  document.getElementById('err-school').style.display = 'none';
+}
+
+document.getElementById('name-input').addEventListener('keydown', e => { if(e.key==='Enter') submit(); });
+document.getElementById('name-input').addEventListener('input', () => { document.getElementById('err-name').style.display='none'; });
+
+function shake(id) {
+  const el = document.getElementById(id);
+  el.classList.remove('shake');
+  void el.offsetWidth;
+  el.classList.add('shake');
+  setTimeout(()=>el.classList.remove('shake'), 400);
+}
+
+async function submit() {
+  let err = false;
+  if (!session) { document.getElementById('err-session').style.display='block'; shake('session-grid'); err=true; }
+  if (!school) { document.getElementById('err-school').style.display='block'; shake('school-grid'); err=true; }
+  const name = document.getElementById('name-input').value.trim();
+  if (!name) { document.getElementById('err-name').style.display='block'; if(!err) document.getElementById('name-input').focus(); err=true; }
+  if (err) return;
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true; btn.classList.add('loading');
+
+  try {
+    await fetch(API, {
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ name, school, action: action==='in'?'簽到':'簽退', session: session==='am'?'上午場':'下午場' })
+    });
+    showSuccess(name);
+  } catch(e) {
+    btn.disabled=false; btn.classList.remove('loading');
+    const el = document.getElementById('err-name');
+    el.textContent='網路錯誤，請重試'; el.style.display='block';
+  }
+}
+
+function showSuccess(name) {
+  const now = new Date();
+  const timeStr = now.toLocaleString('zh-TW',{month:'long',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+  const isIn = action==='in';
+  document.getElementById('suc-icon').className = 'suc-icon '+(isIn?'in':'out');
+  document.getElementById('suc-icon').textContent = isIn?'✓':'👋';
+  document.getElementById('suc-title').textContent = isIn?'簽到成功！':'簽退成功！';
+  document.getElementById('suc-name').className = 'suc-name '+(isIn?'in':'out');
+  document.getElementById('suc-name').textContent = name;
+  document.getElementById('suc-meta').textContent = '🏫 '+school+'　'+(session==='am'?'🌅 上午場':'🌆 下午場');
+  document.getElementById('suc-msg').textContent = isIn?'到場已記錄，感謝參與 🎉':'感謝今天的參與，掰掰！👋';
+  document.getElementById('suc-time').textContent = '⏱ '+timeStr;
+  document.getElementById('form-screen').style.display='none';
+  document.getElementById('success-screen').style.display='block';
+}
+
+function reset() {
+  school=''; session=''; action='in';
+  document.querySelectorAll('.school-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('ses-am').className='opt-btn';
+  document.getElementById('ses-pm').className='opt-btn';
+  document.getElementById('act-in').className='opt-btn sel-in';
+  document.getElementById('act-out').className='opt-btn';
+  document.getElementById('submit-btn').className='btn-submit mode-in';
+  document.getElementById('btn-text').textContent='確認簽到 →';
+  document.getElementById('name-input').value='';
+  document.getElementById('name-input').className='';
+  ['err-session','err-school','err-name'].forEach(id=>document.getElementById(id).style.display='none');
+  const btn=document.getElementById('submit-btn'); btn.disabled=false; btn.classList.remove('loading');
+  document.getElementById('form-screen').style.display='block';
+  document.getElementById('success-screen').style.display='none';
+}
+</script>
+</body>
+</html>
