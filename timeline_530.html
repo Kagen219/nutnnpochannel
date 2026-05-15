@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5月30日 活動議程</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --deep: #16213e;
+    --accent: #e94560;
+    --gold: #f5a623;
+    --teal: #0f9b8e;
+    --light: #f8f4ef;
+    --mid: #e8e0d5;
+    --muted: #8b7d6b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--light);
+    font-family: 'Noto Sans TC', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  .hero {
+    background: var(--deep);
+    color: white;
+    text-align: center;
+    padding: 52px 24px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: -80px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(233,69,96,0.25) 0%, transparent 70%);
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(15,155,142,0.2) 0%, transparent 70%);
+  }
+  .hero-date {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    padding: 6px 18px;
+    border-radius: 2px;
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(24px, 5vw, 38px);
+    font-weight: 900;
+    line-height: 1.35;
+    margin-bottom: 10px;
+    position: relative; z-index: 1;
+  }
+  .hero p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    position: relative; z-index: 1;
+  }
+
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 40px 20px 72px;
+  }
+
+  /* Session label */
+  .session-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 36px 0 16px;
+  }
+  .session-header:first-child { margin-top: 0; }
+  .session-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .icon-morning { background: #fff3cd; }
+  .icon-lunch   { background: #d4f5f1; }
+  .icon-afternoon { background: #fde8ec; }
+  .icon-reg { background: #e8eaf6; }
+  .session-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .session-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  /* Timeline rows */
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 5px; top: 6px; bottom: 6px;
+    width: 2px;
+    background: var(--mid);
+    border-radius: 2px;
+  }
+
+  .row {
+    position: relative;
+    display: flex;
+    gap: 14px;
+    padding-bottom: 16px;
+    align-items: flex-start;
+    animation: fadeUp 0.4s ease both;
+  }
+  .row:last-child { padding-bottom: 0; }
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(10px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  .dot {
+    position: absolute;
+    left: -25px;
+    top: 5px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: white;
+    border: 2.5px solid var(--mid);
+    z-index: 1;
+    flex-shrink: 0;
+  }
+  .row.highlight .dot { border-color: var(--accent); background: var(--accent); }
+  .row.key .dot       { border-color: var(--gold); background: var(--gold); }
+  .row.teal .dot      { border-color: var(--teal); }
+
+  .time {
+    min-width: 96px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    padding-top: 1px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+  .row.highlight .time { color: var(--accent); }
+  .row.key .time       { color: var(--gold); }
+  .row.teal .time      { color: var(--teal); }
+
+  .item {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .item small {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--mid);
+    margin: 28px 0;
+  }
+
+  footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--mid);
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-date">2026年5月30日（六）</div>
+  <h1>挺好Campus<br>跨校聯合成果發表</h1>
+  <p>國立臺南大學府城校區 ✦ 啟明苑演藝廳</p>
+</div>
+
+<div class="container">
+
+  <!-- 報到 -->
+  <div class="session-header">
+    <div class="session-icon icon-reg">🚪</div>
+    <div>
+      <div class="session-title">報到</div>
+    </div>
+  </div>
+  <div class="timeline">
+    <div class="row" style="animation-delay:.05s">
+      <div class="dot"></div>
+      <div class="time">09:30–10:00</div>
+      <div class="item">報到</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 上午場 -->
+  <div class="session-header">
+    <div class="session-icon icon-morning">☀️</div>
+    <div>
+      <div class="session-title">上午場　10:00–12:00</div>
+      <div class="session-sub">多校同行，一場實踐：聯合課程設計到學教影響力</div>
+    </div>
+  </div>
+  <div class="timeline">
+    <div class="row" style="animation-delay:.08s">
+      <div class="dot"></div>
+      <div class="time">10:00–10:05</div>
+      <div class="item">開場與大合照</div>
+    </div>
+    <div class="row" style="animation-delay:.11s">
+      <div class="dot"></div>
+      <div class="time">10:05–10:15</div>
+      <div class="item">創辦人發言</div>
+    </div>
+    <div class="row teal" style="animation-delay:.14s">
+      <div class="dot"></div>
+      <div class="time">10:15–11:10</div>
+      <div class="item">
+        教師發表（每位 10 分鐘）
+        <small>臺南大學 ／ 中山大學 ／ 靜宜大學 ／ 嘉義大學 ／ 淡江大學</small>
+      </div>
+    </div>
+    <div class="row" style="animation-delay:.17s">
+      <div class="dot"></div>
+      <div class="time">11:10–11:50</div>
+      <div class="item">交流對話</div>
+    </div>
+    <div class="row" style="animation-delay:.2s">
+      <div class="dot"></div>
+      <div class="time">11:50–12:00</div>
+      <div class="item">結語</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 午餐 -->
+  <div class="session-header">
+    <div class="session-icon icon-lunch">🍱</div>
+    <div>
+      <div class="session-title">午餐　12:00–13:00</div>
+    </div>
+  </div>
+  <div class="timeline">
+    <div class="row" style="animation-delay:.22s">
+      <div class="dot"></div>
+      <div class="time">12:00–13:00</div>
+      <div class="item">
+        午餐
+        <small>評審 &amp; 五校老師：B309　　與會師生：F101</small>
+      </div>
+    </div>
+    <div class="row" style="animation-delay:.24s">
+      <div class="dot"></div>
+      <div class="time">12:30–13:00</div>
+      <div class="item">評審評分說明（同步進行）</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 下午場 -->
+  <div class="session-header">
+    <div class="session-icon icon-afternoon">🏆</div>
+    <div>
+      <div class="session-title">下午場　13:00–17:30</div>
+      <div class="session-sub">實踐成果創意分享暨頒獎典禮</div>
+    </div>
+  </div>
+  <div class="timeline">
+    <div class="row" style="animation-delay:.27s">
+      <div class="dot"></div>
+      <div class="time">13:00–13:10</div>
+      <div class="item">報到 ／ 線上簽到 ／ 設備測試</div>
+    </div>
+    <div class="row key" style="animation-delay:.3s">
+      <div class="dot"></div>
+      <div class="time">13:10–13:40</div>
+      <div class="item">
+        創辦人致詞
+        <small>貴賓介紹 ／ 評審團介紹 ／ 大合照</small>
+      </div>
+    </div>
+    <div class="row teal" style="animation-delay:.33s">
+      <div class="dot"></div>
+      <div class="time">13:40–14:20</div>
+      <div class="item">
+        創意突破獎 口頭報告
+        <small>每組 5 分鐘 + 串場 1 分鐘</small>
+      </div>
+    </div>
+    <div class="row teal" style="animation-delay:.36s">
+      <div class="dot"></div>
+      <div class="time">14:20–14:50</div>
+      <div class="item">
+        公益實踐獎 口頭報告
+        <small>每組 5 分鐘 + 串場 1 分鐘</small>
+      </div>
+    </div>
+    <div class="row teal" style="animation-delay:.39s">
+      <div class="dot"></div>
+      <div class="time">14:50–15:30</div>
+      <div class="item">
+        永續模式獎 口頭報告
+        <small>每組 5 分鐘 + 串場 1 分鐘</small>
+      </div>
+    </div>
+    <div class="row" style="animation-delay:.42s">
+      <div class="dot"></div>
+      <div class="time">15:30–16:00</div>
+      <div class="item">中場休息</div>
+    </div>
+    <div class="row highlight" style="animation-delay:.45s">
+      <div class="dot"></div>
+      <div class="time">16:00–17:00</div>
+      <div class="item">頒獎典禮</div>
+    </div>
+    <div class="row" style="animation-delay:.48s">
+      <div class="dot"></div>
+      <div class="time">17:00–17:30</div>
+      <div class="item">大合照 ／ 賦歸</div>
+    </div>
+  </div>
+
+  <footer>挺好Campus 2026 公益永續挑戰賽</footer>
+
+</div>
+</body>
+</html>
