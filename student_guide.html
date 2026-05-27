@@ -3,79 +3,170 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>挺好 Campus | 參賽學生須知</title>
+<title>2026 挺好 Campus | 參賽學生行前通知與行動看板</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
   :root {
     --orange: #FF6B00; 
     --orange-light: #FF8C35;
-    --orange-glow: rgba(255,107,0,0.15);
-    --bg: #F9FAFB;
+    --orange-glow: rgba(255,107,0,0.08);
+    --navy: #1A1A2E;
+    --navy-light: #24243E;
+    --bg: #F4F6F8;
     --surface: #FFFFFF;
     --text: #1F2937;
-    --muted: #6B7280;
+    --text-light: #4B5563;
+    --muted: #9CA3AF;
     --border: #E5E7EB;
     --red: #EF4444;
-    --red-glow: rgba(239, 68, 68, 0.1);
+    --red-glow: rgba(239, 68, 68, 0.08);
   }
   
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body {
     font-family: 'Noto Sans TC', sans-serif;
     background: var(--bg);
     color: var(--text);
-    line-height: 1.6;
+    line-height: 1.7;
     padding: 20px;
     padding-bottom: 60px;
   }
   
   .container {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
   }
 
+  /* 大會頂部橫幅 */
   .header {
     text-align: center;
-    margin-bottom: 30px;
-    padding-top: 20px;
-  }
-  .header h1 {
-    font-size: 28px;
-    font-weight: 900;
-    color: var(--orange);
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-  }
-  .header p {
-    color: var(--muted);
-    font-size: 15px;
-  }
-
-  /* 卡片元件 */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    color: white;
+    padding: 40px 20px;
     border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
     position: relative;
     overflow: hidden;
   }
-  .card::before {
+  .header::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; width: 4px; height: 100%;
+    top: -50px; right: -50px;
+    width: 150px; height: 150px;
     background: var(--orange);
+    border-radius: 50%;
+    opacity: 0.15;
   }
-  .card.alert::before {
-    background: var(--red);
+  .header h1 {
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    background: linear-gradient(to right, #FFFFFF, #FFE5D4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .header p {
+    color: var(--orange);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .header .venue-badge {
+    display: inline-block;
+    margin-top: 12px;
+    background: rgba(255,255,255,0.1);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #E5E7EB;
+    border: 1px solid rgba(255,255,255,0.15);
   }
 
-  .card-title {
-    font-size: 20px;
+  /* 頂部大會重要宣佈 */
+  .alert-top-card {
+    background: var(--surface);
+    border-left: 5px solid var(--orange);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+  }
+  .alert-top-card h3 {
+    font-size: 17px;
+    color: var(--navy);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .alert-top-card p {
+    font-size: 14.5px;
+    color: var(--text-light);
+  }
+
+  /* 導覽切換按鈕組 (改為 4 欄) */
+  .tabs-nav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .tab-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 12px 6px;
+    text-align: center;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 13.5px;
     font-weight: 700;
-    margin-bottom: 16px;
+    color: var(--text-light);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .tab-btn span.icon { font-size: 18px; }
+  .tab-btn:hover {
+    border-color: var(--orange-light);
+    color: var(--orange);
+    background: var(--orange-glow);
+  }
+  .tab-btn.active {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: white;
+  }
+
+  /* 分頁主卡片 */
+  .tab-content {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    animation: fadeIn 0.3s ease;
+  }
+  .tab-content.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .content-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--bg);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -87,15 +178,16 @@
   }
   .rules-list li {
     position: relative;
-    padding-left: 28px;
-    margin-bottom: 12px;
+    padding-left: 26px;
+    margin-bottom: 14px;
     font-size: 15px;
+    color: var(--text-light);
   }
   .rules-list li::before {
     content: '📌';
     position: absolute;
-    left: 0; top: 2px;
-    font-size: 16px;
+    left: 0; top: 1px;
+    font-size: 15px;
   }
   .highlight-red {
     color: var(--red);
@@ -105,453 +197,391 @@
     border-radius: 4px;
   }
 
-  /* 動線圖 */
+  /* 動線圖視覺設計 */
   .stage-layout {
     background: var(--bg);
     border: 2px dashed var(--border);
     border-radius: 12px;
-    padding: 20px;
+    padding: 24px 20px;
     text-align: center;
-    margin-top: 16px;
-    position: relative;
+    margin-top: 20px;
   }
-  .stage {
-    background: var(--text);
+  .stage-box {
+    background: var(--navy);
     color: white;
     font-weight: 700;
     padding: 12px;
     border-radius: 8px;
-    margin: 0 auto 30px;
+    margin: 0 auto 24px;
     width: 60%;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-size: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
   }
-  .flow-arrows {
+  .flow-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 10px;
   }
-  .flow-box {
+  .flow-node {
     background: white;
     border: 1px solid var(--border);
-    padding: 10px 16px;
+    padding: 10px 14px;
     border-radius: 8px;
     font-weight: 700;
-    font-size: 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    z-index: 2;
+    font-size: 13.5px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
   }
-  .flow-box.ready {
+  .flow-node.active-ready {
     border-color: var(--orange);
     color: var(--orange);
     background: var(--orange-glow);
   }
-  .arrow {
+  .flow-arrow {
     flex: 1;
     height: 2px;
     background: var(--muted);
     position: relative;
-    margin: 0 10px;
+    margin: 0 8px;
   }
-  .arrow::after {
+  .flow-arrow::after {
     content: '▶';
     position: absolute;
-    right: -5px;
-    top: -9px;
+    right: -4px; top: -9px;
     color: var(--muted);
-    font-size: 14px;
+    font-size: 12px;
   }
-  
-  /* 評審區塊 */
-  .judges-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
+
+  /* 賽程表與清單樣式 */
+  table {
+    width: 100%;
+    border-collapse: collapse;
     margin-top: 10px;
   }
-  .judge-card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: transform 0.2s;
-  }
-  .judge-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--orange-light);
-  }
-  .judge-img-placeholder {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background-color: #E5E7EB;
-    border: 2px solid var(--surface);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin-bottom: 12px;
-    object-fit: cover;
-  }
-  .judge-name {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 4px;
-  }
-  .judge-title {
+  th, td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
     font-size: 14px;
-    color: var(--muted);
   }
-  .judge-org {
-    font-size: 13px;
-    color: var(--orange);
-    margin-top: 2px;
-    font-weight: 500;
-  }
-  
-  /* 賽程表 */
-  .timeline {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .time-slot {
-    display: flex;
+  th {
     background: var(--bg);
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-  }
-  .time-badge {
-    background: var(--orange);
-    color: white;
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 140px;
-  }
-  .time-info {
-    padding: 12px 16px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .team-name {
+    color: var(--navy);
     font-weight: 700;
-    font-size: 16px;
-    color: var(--text);
-    margin-bottom: 4px;
   }
-  .team-school {
-    font-size: 13px;
-    color: var(--muted);
+  .time-col {
+    font-family: 'DM Mono', monospace;
+    color: var(--orange);
+    font-weight: 700;
+    width: 120px;
+    white-space: nowrap;
   }
-  
-  /* 開幕致詞特殊樣式 */
-  .slot-opening {
-    border-left: 4px solid var(--orange);
-    background: var(--orange-glow);
-  }
-  .slot-opening .time-badge {
-    background: var(--text);
-  }
+  .row-opening { background: rgba(26,26,46,0.03); font-weight: 500; }
+  .row-opening .time-col { color: var(--navy); }
 
   /* 溫馨提醒網格 */
   .tips-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
+    margin-top: 10px;
   }
   .tip-box {
     background: var(--bg);
-    padding: 16px;
-    border-radius: 8px;
+    padding: 18px;
+    border-radius: 12px;
     border: 1px solid var(--border);
   }
   .tip-box h4 {
     color: var(--orange);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-size: 15px;
+    font-weight: 700;
   }
   .tip-box p {
-    font-size: 14px;
-    color: var(--muted);
+    font-size: 13.5px;
+    color: var(--text-light);
   }
 
-  @media (max-width: 600px) {
-    .time-slot { flex-direction: column; }
-    .time-badge { justify-content: flex-start; padding: 8px 16px; min-width: auto; }
-    .time-info { padding: 10px 16px; }
-    .flow-arrows { flex-direction: column; gap: 20px; }
-    .arrow { width: 2px; height: 30px; margin: 10px 0; }
-    .arrow::after { top: auto; bottom: -5px; right: -6px; transform: rotate(90deg); }
+  /* 評委卡片佈局 (加入學生版) */
+  .judges-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .judge-row {
+    display: flex;
+    align-items: center;
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    gap: 16px;
+  }
+  .judge-avatar-space {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #E5E7EB;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    flex-shrink: 0;
+    object-fit: cover;
+  }
+  .judge-details { flex: 1; }
+  .judge-meta-top {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .j-name { font-size: 16px; font-weight: 700; color: var(--navy); }
+  .j-title { font-size: 13px; color: var(--muted); }
+  .j-dept { font-size: 13px; color: var(--text-light); margin-top: 1px; }
+  .award-badge {
+    background: var(--orange);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  /* 響應式優化 */
+  @media (max-width: 680px) {
+    .tabs-nav { grid-template-columns: repeat(2, 2fr); gap: 6px; }
+    .tab-content { padding: 20px 16px; }
+    .flow-container { flex-direction: column; gap: 16px; }
+    .flow-arrow { width: 2px; height: 24px; margin: 4px 0; }
+    .flow-arrow::after { top: auto; bottom: -4px; right: -5px; transform: rotate(90deg); }
     .tips-grid { grid-template-columns: 1fr; }
+    th, td { padding: 8px; font-size: 13px; }
+    .time-col { width: 100px; }
+    .judge-row { flex-direction: column; text-align: center; padding: 20px; }
+    .judge-meta-top { justify-content: center; }
   }
 </style>
 </head>
 <body>
 
 <div class="container">
+  
   <div class="header">
-    <h1>2026 挺好 Campus</h1>
-    <p>跨校永續交流與挑戰賽 ｜ 參賽學生注意事項</p>
+    <p>Tinghao Campus 2026</p>
+    <h1>2026 挺好 Campus 跨校永續挑戰賽</h1>
+    <div class="venue-badge">決賽地點：國立臺南大學 府城校區 啟明苑演藝廳</div>
   </div>
 
-  <!-- 溫馨提醒 -->
-  <div class="card">
-    <div class="card-title">💡 賽前溫馨提醒</div>
-    <div class="tips-grid">
-      <div class="tip-box">
-        <h4>👔 服裝儀容建議</h4>
-        <p>建議各組同學穿著「正式服裝」或「整齊便服（Smart Casual）」，展現團隊專業度，也方便現場拍攝大合照。</p>
-      </div>
-      <div class="tip-box">
-        <h4>🪑 座位安排</h4>
-        <p>啟明苑演藝廳內<strong>不另提供座位圖</strong>。各校專屬座位區將於現場標示，請務必依循工作人員引導或現場名牌入座。</p>
-      </div>
-      <div class="tip-box">
-        <h4>🍱 用餐與垃圾</h4>
-        <p>場內禁止飲食（白開水除外）。若中午有在場外或休息室用餐，請記得將垃圾與廚餘分類丟棄。</p>
-  
-      </div>
+  <div class="alert-top-card">
+    <h3>📢 團隊準備重要通知</h3>
+    <p>各位參賽的大學團隊同學辛苦了！大會期末成果發表將於 <b>5 月 30 日（週六）下午 13:15</b> 正式拉開帷幕。請各組助教及隊長協助轉達，並帶領全體組員開始著手進行最終簡報衝刺與實地發表預演。</p>
+  </div>
+
+  <div class="tabs-nav">
+    <div class="tab-btn active" onclick="switchTab(this, 'student-rules')">
+      <span class="icon">⏱️</span>
+      <span>報告與計時</span>
+    </div>
+    <div class="tab-btn" onclick="switchTab(this, 'student-timeline')">
+      <span class="icon">📅</span>
+      <span>決賽時刻表</span>
+    </div>
+    <div class="tab-btn" onclick="switchTab(this, 'student-judges')">
+      <span class="icon">🎖️</span>
+      <span>評審陣容</span>
+    </div>
+    <div class="tab-btn" onclick="switchTab(this, 'student-tips')">
+      <span class="icon">💡</span>
+      <span>注意事項</span>
     </div>
   </div>
 
-  <!-- 卡片 1：報告規範 -->
-  <div class="card alert">
-    <div class="card-title">⏱️ 報告時間與計時規範</div>
+  <div id="student-rules" class="tab-content active">
+    <div class="content-title">⏱️ 發表時間與現場計時規範</div>
+    
     <ul class="rules-list">
-      <li><strong>嚴格限制時間：</strong>每組簡報發表時間為 <strong>5 分鐘</strong>，另預留 1 分鐘為上下台換場時間。</li>
-      <li><span class="highlight-red">強制閉麥克風：</span>5 分鐘時間一到，將<strong>直接關閉麥克風</strong>，請務必精準掌控簡報節奏。</li>
-      <li><strong>計時提示（舉牌與按鈴）：</strong>
-        <br>▶ 報告進行至 <strong>4 分鐘</strong>時，將會「舉牌」並按「<span style="color:var(--orange); font-weight:bold;">一短鈴</span>」提示。
-        <br>▶ 報告進行至 <strong>5 分鐘</strong>時，將會按「<span class="highlight-red">兩長鈴</span>」，請立即結束發表。
+      <li><strong>發表時間限制：</strong>每組團隊登台簡報發表時間**嚴格限制為 5 分鐘**。此外，大會已為每組預留了 1 分鐘的「上下台與設備換場時間」（合計每組控時 6 分鐘）。</li>
+      <li><span class="highlight-red">超時強制閉麥：</span>為維護跨校大會議程如期順暢推進，簡報時間**滿 5 分鐘時將立即關閉麥克風**，請同學們務必精準掌控發表節奏。</li>
+      <li><strong>現場按鈴與舉牌提示機制：</strong>
+        <br>▶ **發表進行至 4 分鐘（剩餘 60 秒）時：** 場內工作人員將會「舉牌提示」，並按「<b>一短鈴</b>」提醒。
+        <br>▶ **發表進行至 5 分鐘（時間截止）時：** 場內將會按「<span class="highlight-red">兩長鈴</span>」，此時請同學立即停止發言。
+      </li>
+      <li><strong>司儀唱名與上台預備動線：</strong>
+        <br>當聽到司儀播報「請下一組團隊準備」時，請該組<b>全體組員</b>立即跟隨現場工作人員的引導，前往舞台前方的<b>「準備席」</b>坐下等待。
+      </li>
+      <li><strong>舞台單向通行動線：</strong>
+        <br>大會發表採取單向循環動線。所有團隊成員一律**從工作人員指引的那一側（右側）上台**，發表結束並接受台下致意後，統一**從舞台的另一面（左側）下台**回座，避免與下一組預備團隊交叉碰撞。
       </li>
     </ul>
-  </div>
 
-  <!-- 卡片 2：上台動線 -->
-  <div class="card">
-    <div class="card-title">🚶‍♂️ 換場與上下台動線</div>
-    <ul class="rules-list">
-      <li><strong>預備機制：</strong>當聽到司儀說明「請跟著工作人員到指定座位坐下等待」時，請整組同學跟隨引導移動至<strong>「準備席」</strong>就座。</li>
-      <li><strong>單向動線：</strong>統一由工作人員方向那一側上台，報告完畢後由舞台的另一面下台，避免動線交錯。</li>
-    </ul>
-    
     <div class="stage-layout">
-      <div class="stage">🎤 舞台 / 簡報區</div>
-      <div class="flow-arrows">
-        <div class="flow-box">另一側下台</div>
-        <div class="arrow" style="transform: rotate(180deg); margin-top: 10px;"></div>
-        <div class="flow-box ready">上台前準備席</div>
-        <div class="arrow"></div>
-        <div class="flow-box">工作人員側上台</div>
+      <div class="stage-box">🎤 啟明苑大舞台 / 中央簡報發表區</div>
+      <div class="flow-container">
+        <div class="flow-node">另一側（左）順向分流下台</div>
+        <div class="flow-arrow" style="transform: rotate(180deg); margin-top: 10px;"></div>
+        <div class="flow-node active-ready">📍 司儀唱名：上台前準備席</div>
+        <div class="flow-arrow"></div>
+        <div class="flow-node">工作人員側（右）上台</div>
       </div>
     </div>
   </div>
-  
-  <!-- 卡片 3：評審陣容 -->
-  <div class="card">
-    <div class="card-title">🎖️ 本屆重量級評審陣容</div>
-    <p style="font-size: 14px; color: var(--muted); margin-bottom: 16px;">感謝以下業界與學界長官蒞臨指導，為同學們的永續專題帶來寶貴建議：</p>
+
+  <div id="student-timeline" class="tab-content">
+    <div class="content-title">📅 5/30 下午決賽發表精確時刻表</div>
+    <p style="font-size: 13.5px; color: var(--text-light); margin-bottom: 12px;">※ 大會發表時間十分緊湊，實際登台時間可能依現場突發狀況進行微調，請所有團隊留在場內並隨時注意司儀廣播。</p>
     
-    <div class="judges-grid">
-      <div class="judge-card">
-        <img src="Pic/judge_1.png" alt="李慶芳 教授" class="judge-img-placeholder" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%22%20height%3D%22100%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20dy%3D%224.5%22%20font-weight%3D%22bold%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%3E%E7%85%A7%E7%89%87%3C%2Ftext%3E%3C%2Fsvg%3E'">
-        <div class="judge-name">李慶芳</div>
-        <div class="judge-title">教授</div>
-        <div class="judge-org">雲林科技大學企管系</div>
+    <table>
+      <thead>
+        <tr>
+          <th>預計時間段</th>
+          <th>學校單位</th>
+          <th>參賽團隊 / 專案名稱</th>
+          <th>大會主責獎項</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-opening">
+          <td class="time-col">13:15 - 13:40</td>
+          <td>挺好 Campus</td>
+          <td>大會決賽正式開幕：創辦人致詞 (10m) / 評審團介紹 (5m) / 下午場大合照 (5m)</td>
+          <td>-</td>
+        </tr>
+        <tr><td class="time-col">13:40 - 13:46</td><td>淡江大學</td><td>「食」現夢想家</td><td>永續模式獎 評選</td></tr>
+        <tr><td class="time-col">13:46 - 13:52</td><td>國立臺南大學</td><td>用愛翻轉未來</td><td>永續模式獎 評選</td></tr>
+        <tr><td class="time-col">13:52 - 13:58</td><td>國立臺南大學</td><td>微光種子</td><td>永續模式獎 評選</td></tr>
+        <tr><td class="time-col">13:58 - 14:04</td><td>嘉義大學</td><td>行動支Food</td><td>永續模式獎 評選</td></tr>
+        <tr><td class="time-col">14:04 - 14:10</td><td>嘉義大學</td><td>集食點光</td><td>公益實踐獎 評選</td></tr>
+        <tr><td class="time-col">14:10 - 14:16</td><td>國立臺南大學</td><td>食在有愛</td><td>公益實踐獎 評選</td></tr>
+        <tr><td class="time-col">14:16 - 14:22</td><td>淡江大學</td><td>滬食行動</td><td>公益實踐獎 評選</td></tr>
+        <tr><td class="time-col">14:22 - 14:28</td><td>靜宜大學</td><td>糕興遇見你</td><td>公益實踐獎 評選</td></tr>
+        <tr><td class="time-col">14:28 - 14:34</td><td>嘉義大學</td><td>湯心比心｜NGO集食計畫</td><td>公益實踐獎 評選</td></tr>
+        <tr><td class="time-col">14:34 - 14:40</td><td>國立中山大學</td><td>第二組</td><td>公益實踐獎 評選</td></tr>
+        <tr><td class="time-col">14:40 - 14:46</td><td>國立中山大學</td><td>資產支配者</td><td>公益實踐獎 評選</td></tr>
+        <tr><td class="time-col">14:46 - 14:52</td><td>嘉義大學</td><td>豆米愛心實驗室</td><td>創意突破獎 評選</td></tr>
+        <tr><td class="time-col">14:52 - 14:58</td><td>嘉義大學</td><td>i不釋手</td><td>創意突破獎 評選</td></tr>
+        <tr><td class="time-col">14:58 - 15:04</td><td>國立臺南大學</td><td>集食救援</td><td>創意突破獎 評選</td></tr>
+        <tr><td class="time-col">15:04 - 15:10</td><td>靜宜大學</td><td>母愛送糕家</td><td>創意突破獎 評選</td></tr>
+        <tr><td class="time-col">15:10 - 15:16</td><td>國立臺南大學</td><td>小事大愛</td><td>創意突破獎 評選</td></tr>
+        <tr><td class="time-col">15:16 - 15:22</td><td>嘉義大學</td><td>餐餐童樂 HealMeal</td><td>創意突破獎 評選</td></tr>
+        <tr class="row-opening">
+          <td class="time-col" style="color: var(--orange);">15:22 - 16:00</td>
+          <td>評審委員會</td>
+          <td>重量級評委專業講評（各3分鐘） ＆ 永續大獎頒獎典禮</td>
+          <td>四大專屬指標獎</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="student-judges" class="tab-content">
+    <div class="content-title">🎖️ 本屆重量級評審陣容</div>
+    <p style="font-size: 14px; color: var(--text-light); margin-bottom: 20px;">
+      大會特別邀請以下業界與學界專家蒞臨指導，為同學們的永續專案帶來寶貴的實務建議與評分：
+    </p>
+
+    <div class="judges-layout">
+      <div class="judge-row">
+        <img src="Pic/judge_1.png" alt="李慶芳 教授" class="judge-avatar-space" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2280%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-size%3D%2212%22%20x%3D%2250%25%22%20y%3D%2254%25%22%20text-anchor%3D%22middle%22%3EPHOTO%3C%2Ftext%3E%3C%2Fsvg%3E'">
+        <div class="judge-details">
+          <div class="judge-meta-top">
+            <span class="j-name">李慶芳</span>
+            <span class="j-title">教授</span>
+          </div>
+          <div class="j-dept">雲林科技大學 企業管理學系</div>
+        </div>
+        <div class="award-badge">🏆 講評領域：公益成果獎</div>
       </div>
-      <div class="judge-card">
-        <img src="Pic/judge_2.png" alt="周信輝 教授" class="judge-img-placeholder" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%22%20height%3D%22100%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20dy%3D%224.5%22%20font-weight%3D%22bold%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%3E%E7%85%A7%E7%89%87%3C%2Ftext%3E%3C%2Fsvg%3E'">
-        <div class="judge-name">周信輝</div>
-        <div class="judge-title">教授</div>
-        <div class="judge-org">國立成功大學企管系</div>
+
+      <div class="judge-row">
+        <img src="Pic/judge_2.png" alt="周信輝 教授" class="judge-avatar-space" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2280%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-size%3D%2212%22%20x%3D%2250%25%22%20y%3D%2254%25%22%20text-anchor%3D%22middle%22%3EPHOTO%3C%2Ftext%3E%3C%2Fsvg%3E'">
+        <div class="judge-details">
+          <div class="judge-meta-top">
+            <span class="j-name">周信輝</span>
+            <span class="j-title">教授</span>
+          </div>
+          <div class="j-dept">國立成功大學 企業管理學系</div>
+        </div>
+        <div class="award-badge">🏆 講評領域：創意突破獎</div>
       </div>
-      <div class="judge-card">
-        <img src="Pic/judge_3.jpg" alt="蘇筱駗 永續長" class="judge-img-placeholder" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%22%20height%3D%22100%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20dy%3D%224.5%22%20font-weight%3D%22bold%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%3E%E7%85%A7%E7%89%87%3C%2Ftext%3E%3C%2Fsvg%3E'">
-        <div class="judge-name">蘇筱駗</div>
-        <div class="judge-title">永續長/執行長</div>
-        <div class="judge-org">家樂福暨文教基金會</div>
+
+      <div class="judge-row">
+        <img src="Pic/judge_3.jpg" alt="蘇小真 永續長/執行長" class="judge-avatar-space" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2280%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%2２%20font-size%3D%2２1２%２　x%3D%２5０％％　y%3D％５４％％　text-anchor%3D％middle％３EPHOTO％３C％２Fsvg％３E'">
+        <div class="judge-details">
+          <div class="judge-meta-top">
+            <span class="j-name">蘇筱駗</span>
+            <span class="j-title">永續長 / 執行長</span>
+          </div>
+          <div class="j-dept">家樂福公司 暨 家樂福文教基金會</div>
+        </div>
+        <div class="award-badge">🏆 講評領域：公益實踐獎</div>
       </div>
-      <div class="judge-card">
-        <img src="Pic/judge_4.png" alt="黃昭勇 總監" class="judge-img-placeholder" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%22%20height%3D%22100%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20dy%3D%224.5%22%20font-weight%3D%22bold%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%3E%E7%85%A7%E7%89%87%3C%2Ftext%3E%3C%2Fsvg%3E'">
-        <div class="judge-name">黃昭勇</div>
-        <div class="judge-title">總監</div>
-        <div class="judge-org">CSR@天下</div>
+
+      <div class="judge-row">
+        <img src="Pic/judge_4.png" alt="黃昭勇 總監" class="judge-avatar-space" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2280%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%２　font-size%3D%２1２％　x%3D％5０％％　y%3D％５４％％　text-anchor%3D％middle％３EPHOTO％３C％２Fsvg％３E'">
+        <div class="judge-details">
+          <div class="judge-meta-top">
+            <span class="j-name">黃昭勇</span>
+            <span class="j-title">總監</span>
+          </div>
+          <div class="j-dept">CSR @ 天下雜誌頻道</div>
+        </div>
+        <div class="award-badge">🏆 講評領域：永續模式獎</div>
       </div>
-      <div class="judge-card">
-        <img src="Pic/judge_5.jpg" alt="張幼霖 創辦人" class="judge-img-placeholder" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%22%20height%3D%22100%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20dy%3D%224.5%22%20font-weight%3D%22bold%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%3E%E7%85%A7%E7%89%87%3C%2Ftext%3E%3C%2Fsvg%3E'">
-        <div class="judge-name">張幼霖</div>
-        <div class="judge-title">創辦人</div>
-        <div class="judge-org">NPOchannel公益平台</div>
+
+      <div class="judge-row" style="border-left: 4px solid var(--navy);">
+        <img src="Pic/judge_5.jpg" alt="張幼霖 創辦人" class="judge-avatar-space" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2280%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%2２%239CA3AF%２　font-size%3D％1２％　x%3D％5０％％　y%3D％５４％％　text-anchor%3D％middle％３EPHOTO％３C％２Fsvg％３E'">
+        <div class="judge-details">
+          <div class="judge-meta-top">
+            <span class="j-name">張幼霖</span>
+            <span class="j-title">創辦人</span>
+          </div>
+          <div class="j-dept">NPOchannel 公益平台 / 社會網絡公司</div>
+        </div>
+        <div class="award-badge" style="background: var(--navy);">🎤 大會總講評 ＆ 指導</div>
       </div>
     </div>
   </div>
 
-  
-  <!-- 卡片 4：報告賽程表 -->
-  <div class="card">
-    <div class="card-title">📅 報告時刻表 (5/30 下午場)</div>
-    <p style="font-size: 14px; color: var(--muted); margin-bottom: 12px;">※ 各組團隊請於 5/30 進行期末成果報告，實際登台時間可能因現場狀況微調，請同學們隨時留意司儀廣播與工作人員指引。</p>
-    <div class="timeline">
+  <div id="student-tips" class="tab-content">
+    <div class="content-title">💡 賽前準備與現場生活須知</div>
+    
+    <div class="tips-grid">
+      <div class="tip-box">
+        <h4>👔 團隊服裝儀容建議</h4>
+        <p>為展現跨校成果發表的專業度與團隊精神，大會建議登台發表的組員著「正式服裝（如襯衫、西裝）」，其餘隨行組員亦請穿著「整齊便服（Smart Casual）」，這也方便大會為大家拍攝極具質感的活動大合照。</p>
+      </div>
       
-      <!-- 開幕致詞 -->
-      <div class="time-slot slot-opening">
-        <div class="time-badge">13:15 - 13:40</div>
-        <div class="time-info">
-          <div class="team-name">大會開幕致詞與介紹</div>
-          <div class="team-school">創辦人致詞 (10分) / 貴賓與評審團介紹 (5分) / 大合照 (5分)</div>
-        </div>
+      <div class="tip-box">
+        <h4>🪑 演藝廳分區座位安排</h4>
+        <p>為保持當天秩序，啟明苑演藝廳內<b>不另提供個人座位圖</b>。各參賽大學皆規劃有「專屬校區座位方塊區」，現場會有明顯標示，請同學們進場時務必依循現場名牌或工作人員的指引依序集中入座。</p>
       </div>
-
-      <!-- 時段 1 -->
-      <div class="time-slot">
-        <div class="time-badge">13:40 - 13:46</div>
-        <div class="time-info">
-          <div class="team-name">「食」現夢想家</div>
-          <div class="team-school">淡江大學</div>
-        </div>
+      
+      <div class="tip-box">
+        <h4>🍱 演藝廳內禁食與環保</h4>
+        <p>依學校場地規範，啟明苑演藝廳內<b>嚴禁飲食（白開水除外）</b>。若中午有在場外或休息室享用午餐盒，用餐完畢後請同學們務必自主做好垃圾分類與廚餘回收，共同維護永續校園環境。</p>
       </div>
-      <!-- 時段 2 -->
-      <div class="time-slot">
-        <div class="time-badge">13:46 - 13:52</div>
-        <div class="time-info">
-          <div class="team-name">用愛翻轉未來</div>
-          <div class="team-school">國立臺南大學</div>
-        </div>
+      
+      <div class="tip-box">
+        <h4>📋 請記得簽到及簽退</h4>
+        <p>大會將會在活動開始前、午餐後及活動結束後呈現出二維碼 請務必記得簽到及簽退。賽前統一收集各組簡報檔並集中在總控台電腦播放。</p>
       </div>
-      <!-- 時段 3 -->
-      <div class="time-slot">
-        <div class="time-badge">13:52 - 13:58</div>
-        <div class="time-info">
-          <div class="team-name">微光種子</div>
-          <div class="team-school">國立臺南大學</div>
-        </div>
-      </div>
-      <!-- 時段 4 -->
-      <div class="time-slot">
-        <div class="time-badge">13:58 - 14:04</div>
-        <div class="time-info">
-          <div class="team-name">行動支Food</div>
-          <div class="team-school">嘉義大學</div>
-        </div>
-      </div>
-      <!-- 時段 5 -->
-      <div class="time-slot">
-        <div class="time-badge">14:04 - 14:10</div>
-        <div class="time-info">
-          <div class="team-name">集食點光</div>
-          <div class="team-school">嘉義大學</div>
-        </div>
-      </div>
-      <!-- 時段 6 -->
-      <div class="time-slot">
-        <div class="time-badge">14:10 - 14:16</div>
-        <div class="time-info">
-          <div class="team-name">食在有愛</div>
-          <div class="team-school">國立臺南大學</div>
-        </div>
-      </div>
-      <!-- 時段 7 -->
-      <div class="time-slot">
-        <div class="time-badge">14:16 - 14:22</div>
-        <div class="time-info">
-          <div class="team-name">滬食行動</div>
-          <div class="team-school">淡江大學</div>
-        </div>
-      </div>
-      <!-- 時段 8 -->
-      <div class="time-slot">
-        <div class="time-badge">14:22 - 14:28</div>
-        <div class="time-info">
-          <div class="team-name">糕興遇見你</div>
-          <div class="team-school">靜宜大學</div>
-        </div>
-      </div>
-      <!-- 時段 9 -->
-      <div class="time-slot">
-        <div class="time-badge">14:28 - 14:34</div>
-        <div class="time-info">
-          <div class="team-name">湯心比心｜NGO集食計畫</div>
-          <div class="team-school">嘉義大學</div>
-        </div>
-      </div>
-      <!-- 時段 10 -->
-      <div class="time-slot">
-        <div class="time-badge">14:34 - 14:40</div>
-        <div class="time-info">
-          <div class="team-name">第二組</div>
-          <div class="team-school">國立中山大學</div>
-        </div>
-      </div>
-      <!-- 時段 11 -->
-      <div class="time-slot">
-        <div class="time-badge">14:40 - 14:46</div>
-        <div class="time-info">
-          <div class="team-name">資產支配者</div>
-          <div class="team-school">國立中山大學</div>
-        </div>
-      </div>
-      <!-- 時段 12 -->
-      <div class="time-slot">
-        <div class="time-badge">14:46 - 14:52</div>
-        <div class="time-info">
-          <div class="team-name">豆米愛心實驗室</div>
-          <div class="team-school">嘉義大學</div>
-        </div>
-      </div>
-      <!-- 時段 13 -->
-      <div class="time-slot">
-        <div class="time-badge">14:52 - 14:58</div>
-        <div class="time-info">
-          <div class="team-name">i不釋手</div>
-          <div class="team-school">嘉義大學</div>
-        </div>
-      </div>
-      <!-- 時段 14 -->
-      <div class="time-slot">
-        <div class="time-badge">14:58 - 15:04</div>
-        <div class="time-info">
-          <div class="team-name">集食救援</div>
-          <div class="team-school">國立臺南大學</div>
-        </div>
-      </div>
-      <!-- 時段 15 -->
-      <div class="time-slot">
-        <div class="time-badge">15:04 - 15:10</div>
-        <div class="time-info">
-          <div class="team-name">母愛送糕家</div>
-          <div class="team-school">靜宜大學</div>
-        </div>
-      </div>
-      <!-- 時段 16 -->
-      <div class="time-slot">
-        <div class="time-badge">15:10 - 15:16</div>
-        <div class="time-info">
-          <div class="team-name">小事大愛</div>
-          <div class="team-school">國立臺南大學</div>
-        </div>
-      </div>
-      <!-- 時段 17 -->
-      <div class="time-slot">
-        <div class="time-badge">15:16 - 15:22</div>
-        <div class="time-info">
-          <div class="team-name"> Errㄙㄡˇㄘㄜˉ</div>
-          <div class="team-school">嘉義大學</div>
-        </div>
-      </div>
-
     </div>
   </div>
 
 </div>
+
+<script>
+  function switchTab(btn, tabId) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
 
 </body>
 </html>
