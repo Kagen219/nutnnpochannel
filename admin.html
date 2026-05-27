@@ -1,3 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>後台管理</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root {
+    --orange:#FF6B00; --orange-l:#FF8C35; --glow:rgba(255,107,0,0.15);
+    --bg:#0F0A05; --s1:#1A1008; --s2:#251808; --bd:#3D2510;
+    --text:#FAF0E6; --muted:#8A6040;
+    --green:#00D97A; --red:#FF4455; --yellow:#FFD32A; --blue:#60A5FA; --purple:#A78BFA;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,107,0,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,107,0,0.022) 1px,transparent 1px);background-size:36px 36px;pointer-events:none;z-index:0;}
+  .wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:22px 16px;}
+
+  /* Header */
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--bd);flex-wrap:wrap;gap:12px;}
+  .logo{display:flex;align-items:center;gap:11px;}
+  .logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--orange),var(--orange-l));border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 0 18px var(--glow);}
+  h1{font-size:18px;font-weight:800;}
+  .sub{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:1px;}
+  .hdr-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .live{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;display:flex;align-items:center;gap:5px;}
+  .dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+  .btn{padding:8px 16px;border:none;border-radius:8px;font-family:'Noto Sans TC',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+  .btn-ghost{background:none;border:1px solid var(--bd);color:var(--muted);}
+  .btn-ghost:hover{border-color:var(--orange);color:var(--orange);}
+  .btn-ghost.spin svg{animation:spin 0.8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .btn-export{background:linear-gradient(135deg,var(--orange),var(--orange-l));color:#fff;box-shadow:0 4px 12px var(--glow);}
+  .btn-export:hover{transform:translateY(-1px);}
+
+  /* Stats */
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px;}
+  .stat{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:14px;text-align:center;transition:border-color 0.2s;}
+  .stat:hover{border-color:var(--orange);}
+  .stat-n{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;line-height:1;margin-bottom:4px;}
+  .stat-l{font-size:10px;color:var(--muted);}
+
+  /* Session filter */
+  .session-bar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+  .ses-btn{padding:7px 18px;border-radius:20px;border:1px solid var(--bd);background:none;color:var(--muted);font-family:'Noto Sans TC',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.18s;}
+  .ses-btn:hover{border-color:var(--orange);color:var(--orange);}
+  .ses-btn.active-all{background:var(--s2);border-color:var(--orange);color:var(--orange);}
+  .ses-btn.active-am{background:rgba(255,107,0,0.12);border-color:var(--orange);color:var(--orange);}
+  .ses-btn.active-pm{background:rgba(167,139,250,0.12);border-color:var(--purple);color:var(--purple);}
+
+  /* School tabs */
+  .school-tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;}
+  .tab{padding:7px 16px;border-radius:20px;border:1px solid var(--bd);background:none;color:var(--muted);font-family:'Noto Sans TC',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.18s;}
+  .tab:hover{border-color:var(--orange);color:var(--orange);}
+  .tab.active{background:linear-gradient(135deg,var(--orange),var(--orange-l));border-color:transparent;color:#fff;box-shadow:0 3px 10px var(--glow);}
+  .tab .cnt{display:inline-block;background:rgba(255,255,255,0.2);border-radius:10px;padding:1px 7px;font-size:10px;margin-left:4px;}
+  .tab:not(.active) .cnt{background:var(--s2);color:var(--muted);}
+
+  /* Groups */
+  .groups-wrap{display:flex;flex-direction:column;gap:14px;}
+  .group-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;overflow:hidden;}
+  .group-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:var(--s2);border-bottom:1px solid var(--bd);}
+  .group-name{font-size:13px;font-weight:700;color:var(--text);}
+  .group-stats{display:flex;gap:10px;font-size:11px;font-family:'DM Mono',monospace;}
+  .gs-in{color:var(--green);}
+  .gs-out{color:var(--blue);}
+  .gs-absent{color:var(--red);}
+
+  /* Person rows */
+  .person-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--bd);}
+  .person{background:var(--s1);padding:11px 16px;display:flex;flex-direction:column;gap:3px;transition:background 0.15s;}
+  .person:hover{background:var(--s2);}
+  .p-name{font-size:13px;font-weight:600;}
+  .p-status{font-size:11px;display:flex;align-items:center;gap:5px;}
+  .p-time{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+  .badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;}
+  .b-in{background:rgba(0,217,122,0.12);color:var(--green);border:1px solid rgba(0,217,122,0.25);}
+  .b-out{background:rgba(96,165,250,0.12);color:var(--blue);border:1px solid rgba(96,165,250,0.25);}
+  .b-absent{background:rgba(255,68,85,0.1);color:var(--red);border:1px solid rgba(255,68,85,0.2);}
+  .b-am{background:rgba(255,107,0,0.1);color:var(--orange);border:1px solid rgba(255,107,0,0.2);font-size:9px;padding:1px 6px;}
+  .b-pm{background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.2);font-size:9px;padding:1px 6px;}
+
+  .loading-bar{height:3px;background:var(--bd);border-radius:3px;margin-bottom:16px;overflow:hidden;display:none;}
+  .loading-bar.on{display:block;}
+  .loading-bar::after{content:'';display:block;height:100%;width:40%;background:linear-gradient(90deg,var(--orange),var(--orange-l));animation:lb 1s ease-in-out infinite alternate;border-radius:3px;}
+  @keyframes lb{from{transform:translateX(-100%)}to{transform:translateX(300%)} }
+
+  .empty{text-align:center;padding:48px 20px;color:var(--muted);font-size:13px;}
+  .empty-i{font-size:32px;margin-bottom:10px;opacity:0.4;}
+
+  @media(max-width:600px){
+    .stats{grid-template-columns:repeat(3,1fr);}
+    .stat-n{font-size:22px;}
+    .person-list{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="logo">
+      <div class="logo-icon">📊</div>
+      <div><h1>後台管理</h1><div class="sub"><span class="dot" style="display:inline-block;margin-right:4px;"></span>ADMIN DASHBOARD</div></div>
+    </div>
+    <div class="hdr-r">
+      <div class="live" id="last-upd">尚未載入</div>
+      <button class="btn btn-ghost" id="ref-btn" onclick="loadData()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+        重新整理
+      </button>
+      <button class="btn btn-export" onclick="exportXlsx()">📤 匯出報表</button>
+    </div>
+  </header>
+
+  <div class="loading-bar" id="lb"></div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat"><div class="stat-n" style="color:var(--orange)" id="s-total">93</div><div class="stat-l">總人數</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--green)" id="s-in">0</div><div class="stat-l">已簽到</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--blue)" id="s-out">0</div><div class="stat-l">已簽退</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--red)" id="s-abs">93</div><div class="stat-l">未到</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--yellow)" id="s-rate">0%</div><div class="stat-l">出席率</div></div>
+  </div>
+
+  <!-- Session filter -->
+  <div class="session-bar">
+    <button class="ses-btn active-all" id="ses-all" onclick="setSession('all')">全部場次</button>
+    <button class="ses-btn" id="ses-am" onclick="setSession('am')">🌅 上午場</button>
+    <button class="ses-btn" id="ses-pm" onclick="setSession('pm')">🌆 下午場</button>
+  </div>
+
+  <!-- School tabs -->
+  <div class="school-tabs" id="school-tabs"></div>
+
+  <!-- Content -->
+  <div id="content"></div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbxw6kOmdPe42hQZ2pzJMfKj--0Qx454enrhzOtu-Cfl8VqziHoxKn62BeGRk59ct5_h/exec';
+
 // ── 完整名單 ──
 const ROSTER = [
   // 評審
@@ -148,3 +295,170 @@ const ROSTER = [
 ];
 
 const SCHOOLS = ['全部', '評審', '來賓', '中山大學', '靜宜大學', '臺南大學', '嘉義大學', '淡江大學'];
+let records = []; // from Google Sheets
+let activeSchool = '全部';
+let activeSession = 'all';
+
+// Build school tabs
+function buildTabs() {
+  const el = document.getElementById('school-tabs');
+  el.innerHTML = SCHOOLS.map(s => {
+    const count = s==='全部' ? ROSTER.length : ROSTER.filter(r=>r.school===s).length;
+    return `<button class="tab ${s===activeSchool?'active':''}" onclick="setSchool('${s}')">${s}<span class="cnt">${count}</span></button>`;
+  }).join('');
+}
+
+function setSchool(s) { activeSchool=s; buildTabs(); render(); }
+
+function setSession(s) {
+  activeSession=s;
+  ['all','am','pm'].forEach(k=>{
+    const el=document.getElementById('ses-'+k);
+    el.className='ses-btn'+(s===k?' active-'+k:'');
+  });
+  render();
+}
+
+// Match record to roster person (fuzzy: trim spaces)
+function getStatus(name, school) {
+  // Filter records for this person
+  const personRecs = records.filter(r => {
+    const rname = String(r['姓名']||'').trim();
+    const rschool = String(r['學校']||'').trim();
+    const sessionOk = activeSession==='all' || 
+      (activeSession==='am' && String(r['場次']||'')===('上午場')) ||
+      (activeSession==='pm' && String(r['場次']||'')===('下午場'));
+    return rname===name.trim() && rschool.includes(school.replace('大學','')) && sessionOk;
+  });
+  if (!personRecs.length) return {status:'absent', time:'', session:''};
+
+  // Find latest action
+  const latest = personRecs[personRecs.length-1];
+  const action = String(latest['動作']||latest['action']||'');
+  const time = String(latest['時間']||'');
+  const session = String(latest['場次']||'');
+  if (action==='簽退') return {status:'out', time, session};
+  if (action==='簽到') return {status:'in', time, session};
+  return {status:'absent', time:'', session:''};
+}
+
+function render() {
+  const roster = activeSchool==='全部' ? ROSTER : ROSTER.filter(r=>r.school===activeSchool);
+
+  // Group by school then group
+  const bySchool = {};
+  roster.forEach(p => {
+    if(!bySchool[p.school]) bySchool[p.school]={}; 
+    if(!bySchool[p.school][p.group]) bySchool[p.school][p.group]=[];
+    bySchool[p.school][p.group].push(p);
+  });
+
+  // Stats
+  let totalIn=0, totalOut=0, totalAbs=0;
+  roster.forEach(p => {
+    const {status} = getStatus(p.name, p.school);
+    if(status==='in') totalIn++;
+    else if(status==='out') totalOut++;
+    else totalAbs++;
+  });
+  document.getElementById('s-total').textContent = roster.length;
+  document.getElementById('s-in').textContent = totalIn;
+  document.getElementById('s-out').textContent = totalOut;
+  document.getElementById('s-abs').textContent = totalAbs;
+  document.getElementById('s-rate').textContent = roster.length>0 ? Math.round((totalIn+totalOut)/roster.length*100)+'%' : '0%';
+
+  // Render groups
+  const content = document.getElementById('content');
+  let html = '<div class="groups-wrap">';
+
+  for (const school of Object.keys(bySchool)) {
+    for (const group of Object.keys(bySchool[school])) {
+      const members = bySchool[school][group];
+      let gIn=0, gOut=0, gAbs=0;
+      members.forEach(p => {
+        const {status}=getStatus(p.name,p.school);
+        if(status==='in') gIn++;
+        else if(status==='out') gOut++;
+        else gAbs++;
+      });
+
+      html += `<div class="group-card">
+        <div class="group-hdr">
+          <div>
+            <div class="group-name">${activeSchool==='全部'?`<span style="color:var(--orange);font-size:11px;margin-right:6px">${school}</span>`:''}${group}</div>
+          </div>
+          <div class="group-stats">
+            <span class="gs-in">✓ ${gIn}</span>
+            <span class="gs-out">↩ ${gOut}</span>
+            <span class="gs-absent">✕ ${gAbs}</span>
+          </div>
+        </div>
+        <div class="person-list">`;
+
+      members.forEach(p => {
+        const {status, time, session} = getStatus(p.name, p.school);
+        const badge = status==='in'
+          ? `<span class="badge b-in">✓ 已簽到</span>`
+          : status==='out'
+          ? `<span class="badge b-out">↩ 已簽退</span>`
+          : `<span class="badge b-absent">✕ 未到</span>`;
+        const sesBadge = session
+          ? `<span class="badge ${session==='上午場'?'b-am':'b-pm'}">${session==='上午場'?'🌅':'🌆'} ${session}</span>`
+          : '';
+        const timeEl = time ? `<div class="p-time">⏱ ${time}</div>` : '';
+        html += `<div class="person">
+          <div class="p-name">${p.name}</div>
+          <div class="p-status">${badge}${sesBadge}</div>
+          ${timeEl}
+        </div>`;
+      });
+
+      html += `</div></div>`;
+    }
+  }
+  html += '</div>';
+  content.innerHTML = html;
+}
+
+async function loadData() {
+  const lb = document.getElementById('lb');
+  const btn = document.getElementById('ref-btn');
+  lb.classList.add('on'); btn.classList.add('spin');
+  try {
+    const res = await fetch(API + '?t=' + Date.now());
+    const data = await res.json();
+    if (data.status==='ok') {
+      records = data.records;
+      render();
+      document.getElementById('last-upd').textContent = '更新 ' + new Date().toLocaleTimeString('zh-TW',{hour12:false});
+    }
+  } catch(e) {
+    document.getElementById('last-upd').textContent = '載入失敗';
+  }
+  lb.classList.remove('on'); btn.classList.remove('spin');
+}
+
+function exportXlsx() {
+  const rows = [['姓名','學校','組別','出席狀態','場次','簽到/退時間']];
+  ROSTER.forEach(p => {
+    const {status,time,session} = getStatus(p.name,p.school);
+    rows.push([p.name, p.school, p.group,
+      status==='in'?'已簽到':status==='out'?'已簽退':'未到',
+      session||'', time||''
+    ]);
+  });
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{wch:10},{wch:10},{wch:16},{wch:8},{wch:8},{wch:12}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, '出席報表');
+  XLSX.writeFile(wb, `出席報表_${new Date().toLocaleDateString('zh-TW').replace(/\//g,'-')}.xlsx`);
+}
+
+// Init
+buildTabs();
+render();
+loadData();
+setInterval(loadData, 30000);
+</script>
+</body>
+</html>
