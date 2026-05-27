@@ -439,12 +439,12 @@ async function loadData() {
 }
 
 function exportXlsx() {
-  const rows = [['姓名','學校','組別','出席狀態','場次','簽到/退時間']];
+  const rows = [['姓名','學校','組別','出席狀態','簽到/退時間']];
   ROSTER.forEach(p => {
-    const {status,time,session} = getStatus(p.name,p.school);
+    const {status,time} = getStatus(p.name,p.school);
     rows.push([p.name, p.school, p.group,
       status==='in'?'已簽到':status==='out'?'已簽退':'未到',
-      session||'', time||''
+      time||''
     ]);
   });
   const ws = XLSX.utils.aoa_to_sheet(rows);
