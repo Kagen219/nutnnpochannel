@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>2026 挺好 Campus | 評審行前通知</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #FF6B00; 
+    --orange-light: #FF8C35;
+    --orange-glow: rgba(255,107,0,0.1);
+    --bg: #F4F6F8;
+    --surface: #FFFFFF;
+    --text: #1F2937;
+    --text-light: #4B5563;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+    --blue: #2563EB;
+    --blue-glow: rgba(37, 99, 235, 0.1);
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 30px 20px;
+    padding-bottom: 60px;
+  }
+  
+  .container {
+    max-width: 850px;
+    margin: 0 auto;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+    background: var(--surface);
+    padding: 40px 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    border-top: 6px solid var(--orange);
+  }
+  .header h1 {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--text);
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .header p {
+    color: var(--orange);
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .header .subtitle {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  }
+  .card-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--orange);
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 12px;
+  }
+  
+  .highlight-box {
+    background: var(--orange-glow);
+    border-left: 4px solid var(--orange);
+    padding: 16px 20px;
+    border-radius: 4px 8px 8px 4px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: var(--text-light);
+  }
+
+  .highlight-box strong {
+    color: var(--text);
+  }
+
+  /* 兩欄式排版 */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .info-block {
+    background: var(--bg);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  .info-block h3 {
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .info-block p, .info-block ul {
+    font-size: 15px;
+    color: var(--text-light);
+  }
+  .info-block ul {
+    padding-left: 20px;
+    margin-top: 8px;
+  }
+
+  /* 參與大學標籤 */
+  .tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  .tag {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-light);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+
+  /* 表格設計 */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+  th, td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    background: var(--bg);
+    font-weight: 700;
+    color: var(--text);
+    font-size: 15px;
+  }
+  td {
+    font-size: 15px;
+    color: var(--text-light);
+  }
+  tr:hover td {
+    background: #F9FAFB;
+  }
+  .td-time {
+    font-family: 'DM Mono', monospace;
+    color: var(--orange);
+    font-weight: 500;
+    white-space: nowrap;
+    width: 120px;
+  }
+
+  /* 交通指南 */
+  .transit-list {
+    list-style: none;
+  }
+  .transit-list li {
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: 16px;
+  }
+  .transit-list li::before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 18px;
+  }
+  .transit-list li:nth-child(1)::before { content: '🚄'; }
+  .transit-list li:nth-child(2)::before { content: '🚆'; }
+  .transit-list li:nth-child(3)::before { content: '🚗'; }
+
+  @media (max-width: 768px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .card { padding: 20px; }
+    th, td { padding: 10px; }
+  }
+  .time-slot {
+    display: flex;
+    background: var(--bg);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+   .time-badge {
+    background: var(--orange);
+    color: white;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 140px;
+  }
+  .time-info {
+    padding: 12px 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .team-name {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .team-school {
+    font-size: 13px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- 大會標題 -->
+  <div class="header">
+    <h1>2026 挺好 Campus</h1>
+    <p>跨校永續交流與挑戰賽</p>
+    <div class="subtitle">【評委暨貴賓 行前專屬通知】</div>
+  </div>
+
+  <!-- 重要提醒（聯絡人） -->
+  <div class="card">
+    <div class="highlight-box" style="margin-bottom: 0;">
+      <h3 style="color: var(--orange); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+        <span>🔔</span> 抵達會場專人接待
+      </h3>
+      <p style="margin: 0; line-height: 1.8;">
+        為確保您抵達時能有最完善的引導與接待，懇請各位委員於抵達會場周邊時，<b>務必撥打下方專線</b>，我們將安排專人前往迎接：<br>
+        接待聯絡人：<strong>蕭主任助教 — 王羿龍</strong><br>
+        接待專線：<strong style="font-size: 18px; color: var(--orange);">0902-305-826</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- 活動簡介與參與學校 -->
+  <div class="card">
+    <div class="card-title">📌 大會活動介紹</div>
+    <p style="margin-bottom: 16px; color: var(--text-light);">
+      本次「挺好 Campus」活動匯聚了來自五所頂尖大學的師生團隊，共同針對 ESG 與企業社會責任等永續議題進行專題分享與挑戰競賽。整日活動劃分為上午「師長交流」、中午「跨校餐敘」與下午的「學生挑戰賽」。
+    </p>
+    
+    <div class="grid-2">
+      <div class="info-block">
+        <h3>☀️ 上午場：五校教師永續交流會</h3>
+        <p><strong>時間：</strong>09:30 - 12:00<br>
+        <strong>說明：</strong>透過跨校教師的分享與綜合對談，促進各院校間推動永續實務與教學經驗的深度交流。</p>
+      </div>
+      <div class="info-block">
+        <h3>🍽️ 中午場：師長與評審交流午宴</h3>
+        <p><strong>時間：</strong>12:00 - 13:00<br>
+        <strong>地點：</strong>B309 教室<br>
+        <strong>說明：</strong>提供豐富午宴，讓評審與各校指導教授能在輕鬆的氛圍中進行實務經驗交流。</p>
+      </div>
+    </div>
+    
+    <div class="info-block" style="margin-bottom: 20px;">
+      <h3>⛅ 下午場：學生跨校永續挑戰賽暨頒獎典禮</h3>
+      <p><strong>時間：</strong>13:15 陸續開場<br>
+      <strong>說明：</strong>由各校學生團隊進行專案發表，並於賽後由評委進行專業講評與頒獎典禮。</p>
+    </div>
+
+    <h4 style="color: var(--text); margin-bottom: 8px; font-size: 15px;">本屆參與大學陣容：</h4>
+    <div class="tags-container">
+      <div class="tag">國立臺南大學</div>
+      <div class="tag">國立中山大學</div>
+      <div class="tag">國立嘉義大學</div>
+      <div class="tag">淡江大學</div>
+      <div class="tag">靜宜大學</div>
+    </div>
+  </div>
+
+  <!-- 評審職責與獎項分配 -->
+  <div class="card">
+    <div class="card-title">🎖️ 評委職責與主責獎項</div>
+    <p style="margin-bottom: 15px; color: var(--text-light);">
+      感謝各位長官與教授撥冗擔任本屆評審。在所有學生團隊（共計 17 組）發表完畢後，大會將進入「講評與頒獎」環節。<br>
+      煩請各位評委針對您所主責的獎項領域，給予同學 <strong>約 3 分鐘的綜合講評</strong>，並於講評後 <strong>親自頒發該獎項</strong> 予獲獎團隊。
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>評審姓名 / 單位職稱</th>
+          <th>主責講評與頒發獎項</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>李慶芳 教授</strong><br><span style="font-size:13px; color:var(--muted);">雲林科技大學企管系</span></td>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 公益成果獎</span></td>
+        </tr>
+        <tr>
+          <td><strong>周信輝 教授</strong><br><span style="font-size:13px; color:var(--muted);">國立成功大學企管系</span></td>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 創意突破獎</span></td>
+        </tr>
+        <tr>
+          <td><strong>蘇小真 永續長/執行長</strong><br><span style="font-size:13px; color:var(--muted);">家樂福暨文教基金會</span></td>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 公益實踐獎</span></td>
+        </tr>
+        <tr>
+          <td><strong>黃昭勇 總監</strong><br><span style="font-size:13px; color:var(--muted);">CSR@天下</span></td>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 永續模式獎</span></td>
+        </tr>
+        <tr>
+          <td><strong>張幼霖 創辦人</strong><br><span style="font-size:13px; color:var(--muted);">NPOchannel公益平台</span></td>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 大會總講評</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 完整賽程表 -->
+  <div class="card">
+    <div class="card-title">📅 大會完整時間表 (5/30)</div>
+    <table>
+      <tbody>
+        <tr>
+          <td class="td-time">09:30 - 10:00</td>
+          <td>師長與來賓報到 (上午場)</td>
+        </tr>
+        <tr>
+          <td class="td-time">10:00 - 10:15</td>
+          <td>交流會開場與大合照</td>
+        </tr>
+        <tr>
+          <td class="td-time">10:15 - 11:10</td>
+          <td>五校教師永續發表分享</td>
+        </tr>
+        <tr>
+          <td class="td-time">11:10 - 12:00</td>
+          <td>綜合交流對談</td>
+        </tr>
+        <tr style="background: var(--blue-glow);">
+          <td class="td-time" style="color: var(--blue);">12:00 - 13:00</td>
+          <td><strong>交流午宴 (地點：B309教室)</strong> —— 敬邀評審與師長共進午餐</td>
+        </tr>
+        <tr>
+          <td class="td-time">13:15 - 13:40</td>
+          <td>開幕致詞、貴賓評審介紹與大合照</td>
+        </tr>
+        <tr>
+          <td class="td-time">13:40 - 15:22</td>
+          <td>跨校學生團隊 永續專題提案發表 (嚴格計時每組5+1分鐘)</td>
+        </tr>
+        <tr style="background: var(--orange-glow);">
+          <td class="td-time" style="color: var(--orange); font-weight: 700;">15:22 - 16:00</td>
+          <td><strong>評審講評與頒獎典禮</strong> —— 進行 3 分鐘專業回饋與頒發獎項</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 交通指南 -->
+  <div class="card">
+    <div class="card-title">📍 交通與地點指南</div>
+    <div class="info-block" style="margin-bottom: 20px;">
+      <h3 style="color: var(--orange); font-size: 18px;">國立臺南大學 (府城校區) 啟明苑演藝廳</h3>
+      <p style="font-size: 16px; margin-top: 5px;"><strong>地址：</strong>台南市中西區樹林街二段33號</p>
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14692.612904677067!2d120.19985627792148!3d22.981392320620156!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346e768128d07bab%3A0xe5824a37b1ccb6e4!2z5ZyL56uL6Ie65Y2X5aSn5a24!5e0!3m2!1szh-TW!2stw!4v1779905677788!5m2!1szh-TW!2stw" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+
+    <ul class="transit-list">
+      <li>
+        <strong>高鐵轉乘：</strong><br>
+        搭乘高鐵至「台南站」，前往 2 號出口轉乘「高鐵快捷公車 (H31 往台南市政府方向)」。請於「延平郡王祠站」下車，步行約 5-8 分鐘即可抵達本校樹林街大門。
+      </li>
+      <li>
+        <strong>台鐵與市區公車：</strong><br>
+        搭乘台鐵至「台南火車站」，可轉乘大台南公車（如 3 路、紅幹線等）至本校附近站牌；或於火車站前站搭乘計程車，車程約 5-10 分鐘即可抵達。
+      </li>
+      <li>
+        <strong>自行開車與停車資訊：</strong><br>
+        行駛國道一號下仁德交流道（往台南市區方向）<br>
+        
+        <span style="color: var(--orange); font-size: 14px; margin-top: 4px; display: inline-block;">※ 若有任何突發狀況，請與王羿龍聯繫。</span>
+      </li>
+    </ul>
+  </div>
+
+    <div class="card">
+        <div class="card-title">📅 報告時刻表 (5/30 下午場)</div>
+
+      <!-- 時段 1 -->
+      <div class="time-slot">
+        <div class="time-badge">13:40 - 13:46</div>
+        <div class="time-info">
+          <div class="team-name">「食」現夢想家</div>
+          <div class="team-school">淡江大學</div>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 永續模式獎</span></td>
+        </div>
+      </div>
+      <!-- 時段 2 -->
+      <div class="time-slot">
+        <div class="time-badge">13:46 - 13:52</div>
+        <div class="time-info">
+          <div class="team-name">用愛翻轉未來</div>
+          <div class="team-school">國立臺南大學</div>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 永續模式獎</span></td>
+        </div>
+      </div>
+      <!-- 時段 3 -->
+      <div class="time-slot">
+        <div class="time-badge">13:52 - 13:58</div>
+        <div class="time-info">
+          <div class="team-name">微光種子</div>
+          <div class="team-school">國立臺南大學</div>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 永續模式獎</span></td>
+        </div>
+      </div>
+      <!-- 時段 4 -->
+      <div class="time-slot">
+        <div class="time-badge">13:58 - 14:04</div>
+        <div class="time-info">
+          <div class="team-name">行動支Food</div>
+          <div class="team-school">嘉義大學</div>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 永續模式獎</span></td>
+        </div>
+      </div>
+      <!-- 時段 5 -->
+      <div class="time-slot">
+        <div class="time-badge">14:04 - 14:10</div>
+        <div class="time-info">
+          <div class="team-name">集食點光</div>
+          <div class="team-school">嘉義大學</div>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 創意突破獎</span></td>
+        </div>
+      </div>
+      <!-- 時段 6 -->
+      <div class="time-slot">
+        <div class="time-badge">14:10 - 14:16</div>
+        <div class="time-info">
+          <div class="team-name">食在有愛</div>
+          <div class="team-school">國立臺南大學</div>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 創意突破獎</span></td>
+        </div>
+      </div>
+      <!-- 時段 7 -->
+      <div class="time-slot">
+        <div class="time-badge">14:16 - 14:22</div>
+        <div class="time-info">
+          <div class="team-name">滬食行動</div>
+          <div class="team-school">淡江大學</div>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 創意突破獎</span></td>
+        </div>
+      </div>
+      <!-- 時段 8 -->
+      <div class="time-slot">
+        <div class="time-badge">14:22 - 14:28</div>
+        <div class="time-info">
+          <div class="team-name">糕興遇見你</div>
+          <div class="team-school">靜宜大學</div>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 創意突破獎</span></td>
+        </div>
+      </div>
+      <!-- 時段 9 -->
+      <div class="time-slot">
+        <div class="time-badge">14:28 - 14:34</div>
+        <div class="time-info">
+          <div class="team-name">湯心比心｜NGO集食計畫</div>
+          <div class="team-school">嘉義大學</div>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 創意突破獎</span></td>
+        </div>
+      </div>
+      <!-- 時段 10 -->
+      <div class="time-slot">
+        <div class="time-badge">14:34 - 14:40</div>
+        <div class="time-info">
+          <div class="team-name">第二組</div>
+          <div class="team-school">國立中山大學</div>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 創意突破獎</span></td>
+        </div>
+      </div>
+      <!-- 時段 11 -->
+      <div class="time-slot">
+        <div class="time-badge">14:40 - 14:46</div>
+        <div class="time-info">
+          <div class="team-name">資產支配者</div>
+          <div class="team-school">國立中山大學</div>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 公益實踐獎</span></td>
+        </div>
+      </div>
+      <!-- 時段 12 -->
+      <div class="time-slot">
+        <div class="time-badge">14:46 - 14:52</div>
+        <div class="time-info">
+          <div class="team-name">豆米愛心實驗室</div>
+          <div class="team-school">嘉義大學</div>
+          <td><span style="color: var(--orange); font-weight: 700;">🏆 公益實踐獎</span></td>
+        </div>
+      </div>
+      <!-- 時段 13 -->
+      <div class="time-slot">
+        <div class="time-badge">14:52 - 14:58</div>
+        <div class="time-info">
+          <div class="team-name">i不釋手</div>
+          <div class="team-school">嘉義大學</div>
+        <td><span style="color: var(--orange); font-weight: 700;">🏆 公益實踐獎</span></td>
+        </div>
+      </div>
+      <!-- 時段 14 -->
+      <div class="time-slot">
+        <div class="time-badge">14:58 - 15:04</div>
+        <div class="time-info">
+          <div class="team-name">集食救援</div>
+          <div class="team-school">國立臺南大學</div>
+        <td><span style="color: var(--orange); font-weight: 700;">🏆 公益實踐獎</span></td>
+        </div>
+      </div>
+      <!-- 時段 15 -->
+      <div class="time-slot">
+        <div class="time-badge">15:04 - 15:10</div>
+        <div class="time-info">
+          <div class="team-name">母愛送糕家</div>
+          <div class="team-school">靜宜大學</div>
+        <td><span style="color: var(--orange); font-weight: 700;">🏆 公益實踐獎</span></td>
+        </div>
+      </div>
+      <!-- 時段 16 -->
+      <div class="time-slot">
+        <div class="time-badge">15:10 - 15:16</div>
+        <div class="time-info">
+          <div class="team-name">小事大愛</div>
+          <div class="team-school">國立臺南大學</div>
+        <td><span style="color: var(--orange); font-weight: 700;">🏆 公益實踐獎</span></td>
+        </div>
+      </div>
+      <!-- 時段 17 -->
+      <div class="time-slot">
+        <div class="time-badge">15:16 - 15:22</div>
+        <div class="time-info">
+          <div class="team-name"> Errㄙㄡˇㄘㄜˉ</div>
+          <div class="team-school">嘉義大學</div>
+        <td><span style="color: var(--orange); font-weight: 700;">🏆 公益實踐獎</span></td>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
