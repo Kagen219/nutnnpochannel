@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>挺好 Campus | 參賽學生須知</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #FF6B00; 
+    --orange-light: #FF8C35;
+    --orange-glow: rgba(255,107,0,0.15);
+    --bg: #F9FAFB;
+    --surface: #FFFFFF;
+    --text: #1F2937;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+    --red: #EF4444;
+    --red-glow: rgba(239, 68, 68, 0.1);
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 20px;
+    padding-bottom: 60px;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-top: 20px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--orange);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .header p {
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  /* 卡片元件 */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 4px; height: 100%;
+    background: var(--orange);
+  }
+  .card.alert::before {
+    background: var(--red);
+  }
+
+  .card-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* 報告規範列表 */
+  .rules-list {
+    list-style: none;
+  }
+  .rules-list li {
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: 12px;
+    font-size: 15px;
+  }
+  .rules-list li::before {
+    content: '📌';
+    position: absolute;
+    left: 0; top: 2px;
+    font-size: 16px;
+  }
+  .highlight-red {
+    color: var(--red);
+    font-weight: 700;
+    background: var(--red-glow);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  /* 動線圖 */
+  .stage-layout {
+    background: var(--bg);
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 16px;
+    position: relative;
+  }
+  .stage {
+    background: var(--text);
+    color: white;
+    font-weight: 700;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 0 auto 30px;
+    width: 60%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .flow-arrows {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+  }
+  .flow-box {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    z-index: 2;
+  }
+  .flow-box.ready {
+    border-color: var(--orange);
+    color: var(--orange);
+    background: var(--orange-glow);
+  }
+  .arrow {
+    flex: 1;
+    height: 2px;
+    background: var(--muted);
+    position: relative;
+    margin: 0 10px;
+  }
+  .arrow::after {
+    content: '▶';
+    position: absolute;
+    right: -5px;
+    top: -9px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  
+  /* 賽程表 */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .time-slot {
+    display: flex;
+    background: var(--bg);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .time-badge {
+    background: var(--orange);
+    color: white;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 130px;
+  }
+  .time-info {
+    padding: 12px 16px;
+    flex: 1;
+  }
+  .team-name {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .team-school {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* 座位區塊示意 */
+  .seating-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .seat-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 8px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 80px;
+  }
+  .seat-block.aisle {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .seat-block.stage-front {
+    grid-column: span 4;
+    background: var(--text);
+    color: white;
+    margin-bottom: 12px;
+  }
+  .seat-block.waiting {
+    background: var(--orange-glow);
+    color: var(--orange);
+    border-color: var(--orange);
+  }
+
+  @media (max-width: 600px) {
+    .time-slot { flex-direction: column; }
+    .time-badge { justify-content: flex-start; padding: 8px 16px; min-width: auto; }
+    .time-info { padding: 10px 16px; }
+    .seating-grid { grid-template-columns: 1fr 1fr; }
+    .seat-block.stage-front { grid-column: span 2; }
+    .flow-arrows { flex-direction: column; gap: 20px; }
+    .arrow { width: 2px; height: 30px; margin: 10px 0; }
+    .arrow::after { top: auto; bottom: -5px; right: -6px; transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>2026 挺好 Campus</h1>
+    <p>跨校永續交流與挑戰賽 ｜ 參賽學生注意事項</p>
+  </div>
+
+  <!-- 卡片 1：報告規範 -->
+  <div class="card alert">
+    <div class="card-title">⏱️ 報告時間與計時規範</div>
+    <ul class="rules-list">
+      <li><strong>嚴格限制時間：</strong>每組簡報發表時間為 <strong>5 分鐘</strong>，另預留 1 分鐘為上下台換場時間。</li>
+      <li><span class="highlight-red">強制閉麥克風：</span>5 分鐘時間一到，將<strong>直接關閉麥克風</strong>，請務必精準掌控簡報節奏。</li>
+      <li><strong>計時提示（舉牌與按鈴）：</strong>
+        <br>▶ 報告進行至 <strong>4 分鐘</strong>時，將會「舉牌」並按「<span style="color:var(--orange); font-weight:bold;">一短鈴</span>」提示。
+        <br>▶ 報告進行至 <strong>5 分鐘</strong>時，將會按「<span class="highlight-red">兩長鈴</span>」，請立即結束發表。
+      </li>
+    </ul>
+  </div>
+
+  <!-- 卡片 2：上台動線 -->
+  <div class="card">
+    <div class="card-title">🚶‍♂️ 換場與上下台動線</div>
+    <ul class="rules-list">
+      <li><strong>預備機制：</strong>當聽到司儀播報「下一組請準備」時，請整組同學跟隨工作人員引導，移動至舞台前方的<strong>「準備席」</strong>就座。</li>
+      <li><strong>單向動線：</strong>統一由工作人員引導的一側（右方）上台，報告完畢後由另一側（左方）下台回座，避免動線交錯。</li>
+    </ul>
+    
+    <div class="stage-layout">
+      <div class="stage">🎤 舞台 / 簡報區</div>
+      <div class="flow-arrows">
+        <div class="flow-box">左側下台</div>
+        <div class="arrow" style="transform: rotate(180deg); margin-top: 10px;"></div>
+        <div class="flow-box ready">上台前準備席</div>
+        <div class="arrow"></div>
+        <div class="flow-box">右側上台</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 卡片 3：分區座位圖 -->
+  <div class="card">
+    <div class="card-title">🪑 啟明苑演藝廳 - 座位規劃示意</div>
+    <p style="font-size: 14px; color: var(--muted); margin-bottom: 12px;">※ 各校專屬座位區將於現場標示，請依循工作人員引導或現場名牌入座。</p>
+    <div class="seating-grid">
+      <div class="seat-block stage-front">舞台區 (Stage)</div>
+      
+      <!-- 第一排示意 -->
+      <div class="seat-block">中山大學</div>
+      <div class="seat-block waiting">參賽隊伍準備席</div>
+      <div class="seat-block">淡江大學<br><span style="font-size:11px; font-weight:normal;">攝影區</span></div>
+      <div class="seat-block">靜宜大學</div>
+      
+      <!-- 走道示意 -->
+      <div class="seat-block aisle">走道</div>
+      <div class="seat-block aisle">走道</div>
+      <div class="seat-block aisle">走道</div>
+      <div class="seat-block aisle">走道</div>
+      
+      <!-- 第二排示意 -->
+      <div class="seat-block">中山大學</div>
+      <div class="seat-block">臺南大學</div>
+      <div class="seat-block">淡江大學</div>
+      <div class="seat-block">嘉義大學</div>
+    </div>
+  </div>
+
+  <!-- 卡片 4：報告賽程表 -->
+  <div class="card">
+    <div class="card-title">📅 報告時刻表 (5/30 下午場)</div>
+    <div class="timeline">
+      <!-- 時段 1 -->
+      <div class="time-slot">
+        <div class="time-badge">13:40 - 13:46</div>
+        <div class="time-info">
+          <div class="team-name">「食」現夢想家</div>
+          <div class="team-school">淡江大學</div>
+        </div>
+      </div>
+      <!-- 時段 2 -->
+      <div class="time-slot">
+        <div class="time-badge">13:46 - 13:52</div>
+        <div class="time-info">
+          <div class="team-name">用愛翻轉未來</div>
+          <div class="team-school">國立臺南大學</div>
+        </div>
+      </div>
+      <!-- 時段 3 -->
+      <div class="time-slot">
+        <div class="time-badge">13:52 - 13:58</div>
+        <div class="time-info">
+          <div class="team-name">微光種子</div>
+          <div class="team-school">國立臺南大學</div>
+        </div>
+      </div>
+      <!-- 時段 4 -->
+      <div class="time-slot">
+        <div class="time-badge">13:58 - 14:04</div>
+        <div class="time-info">
+          <div class="team-name">行動支Food</div>
+          <div class="team-school">嘉義大學</div>
+        </div>
+      </div>
+      <!-- 時段 5 -->
+      <div class="time-slot">
+        <div class="time-badge">14:04 - 14:10</div>
+        <div class="time-info">
+          <div class="team-name">集食點光</div>
+          <div class="team-school">嘉義大學</div>
+        </div>
+      </div>
+      <!-- 時段 6 -->
+      <div class="time-slot">
+        <div class="time-badge">14:10 - 14:16</div>
+        <div class="time-info">
+          <div class="team-name">食在有愛</div>
+          <div class="team-school">國立臺南大學</div>
+        </div>
+      </div>
+      <!-- 時段 7 -->
+      <div class="time-slot">
+        <div class="time-badge">14:16 - 14:22</div>
+        <div class="time-info">
+          <div class="team-name">滬食行動</div>
+          <div class="team-school">淡江大學</div>
+        </div>
+      </div>
+      <!-- 時段 8 -->
+      <div class="time-slot">
+        <div class="time-badge">14:22 - 14:28</div>
+        <div class="time-info">
+          <div class="team-name">糕興遇見你</div>
+          <div class="team-school">靜宜大學</div>
+        </div>
+      </div>
+      <!-- 時段 9 -->
+      <div class="time-slot">
+        <div class="time-badge">14:28 - 14:34</div>
+        <div class="time-info">
+          <div class="team-name">湯心比心｜NGO集食計畫</div>
+          <div class="team-school">嘉義大學</div>
+        </div>
+      </div>
+      <!-- 時段 10 -->
+      <div class="time-slot">
+        <div class="time-badge">14:34 - 14:40</div>
+        <div class="time-info">
+          <div class="team-name">第二組</div>
+          <div class="team-school">國立中山大學</div>
+        </div>
+      </div>
+      <!-- 時段 11 -->
+      <div class="time-slot">
+        <div class="time-badge">14:40 - 14:46</div>
+        <div class="time-info">
+          <div class="team-name">資產支配者</div>
+          <div class="team-school">國立中山大學</div>
+        </div>
+      </div>
+      <!-- 時段 12 -->
+      <div class="time-slot">
+        <div class="time-badge">14:46 - 14:52</div>
+        <div class="time-info">
+          <div class="team-name">豆米愛心實驗室</div>
+          <div class="team-school">嘉義大學</div>
+        </div>
+      </div>
+      <!-- 時段 13 -->
+      <div class="time-slot">
+        <div class="time-badge">14:52 - 14:58</div>
+        <div class="time-info">
+          <div class="team-name">i不釋手</div>
+          <div class="team-school">嘉義大學</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
