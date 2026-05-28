@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>2026 挺好 Campus | 接待工作人員行動總控板</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #FF6B00; 
+    --orange-light: #FF8C35;
+    --orange-glow: rgba(255,107,0,0.08);
+    --navy: #1A1A2E;
+    --navy-light: #24243E;
+    --bg: #F4F6F8;
+    --surface: #FFFFFF;
+    --text: #1F2937;
+    --text-light: #4B5563;
+    --muted: #9CA3AF;
+    --border: #E5E7EB;
+    --green: #059669;
+    --green-glow: rgba(5, 150, 105, 0.08);
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 20px;
+    padding-bottom: 60px;
+  }
+  
+  .container { max-width: 900px; margin: 0 auto; }
+
+  /* 總控頂部橫幅 */
+  .header {
+    text-align: center;
+    background: linear-gradient(135deg, var(--navy) 0%, #0F172A 100%);
+    color: white;
+    padding: 30px 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 120px; height: 120px;
+    background: var(--green);
+    border-radius: 50%;
+    opacity: 0.2;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 900;
+    margin-bottom: 6px;
+    color: #4ADE80; /* 總控用綠色系點綴 */
+  }
+  .header p { color: var(--muted); font-size: 14px; letter-spacing: 1px; }
+
+  /* 頂部緊急佈達 (綠色調表示 Staff Only) */
+  .alert-top-card {
+    background: var(--surface);
+    border-left: 5px solid var(--green);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+  }
+  .alert-top-card h3 {
+    font-size: 17px;
+    color: var(--green);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .alert-top-card p { font-size: 14.5px; color: var(--text-light); }
+
+  /* 切換按鈕組 */
+  .tabs-nav {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .tab-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 12px 6px;
+    text-align: center;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-light);
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .tab-btn span.icon { font-size: 18px; }
+  .tab-btn.active { background: var(--navy); border-color: var(--navy); color: white; }
+
+  /* 分頁卡片 */
+  .tab-content {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    animation: fadeIn 0.3s ease;
+  }
+  .tab-content.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  .content-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--bg);
+  }
+
+  /* 表格樣式 */
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+  th { background: var(--bg); color: var(--navy); font-weight: 700; }
+  .time-col { font-family: 'DM Mono', monospace; color: var(--green); font-weight: 700; width: 105px; white-space: nowrap; }
+  .row-alert { background: var(--green-glow); font-weight: 500; }
+  
+  /* VIP清單樣式 */
+  .vip-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .vip-card.judge {
+    border-left: 4px solid var(--orange);
+    background: var(--orange-glow);
+  }
+  .vip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .vip-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .vip-title {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .vip-time {
+    background: var(--surface);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--orange);
+    border: 1px solid var(--orange-light);
+  }
+  .vip-info {
+    font-size: 14px;
+    color: var(--text-light);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .vip-info span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  @media (max-width: 680px) {
+    .tabs-nav { gap: 6px; }
+    .tab-content { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="header">
+    <h1>🤝 挺好 Campus 接待總控板</h1>
+    <p>Staff Only · 老師與評委接待專屬任務表</p>
+  </div>
+
+  <div class="alert-top-card">
+    <h3>🚨 接待最高指導原則</h3>
+    <p><b>優先順序：</b> 評委優先 ➔ 老師次之 ➔ 學生最後。<br>
+       當天只要聽到「要接待評委」，請務必放下手邊次要工作，以評委接待為第一優先！</p>
+  </div>
+
+  <div class="tabs-nav">
+    <div class="tab-btn active" onclick="switchTab(this, 'staff-vip')">
+      <span class="icon">📋</span><span>貴賓抵達名單</span>
+    </div>
+    <div class="tab-btn" onclick="switchTab(this, 'staff-schedule')">
+      <span class="icon">⏰</span><span>接待專屬細流</span>
+    </div>
+    <div class="tab-btn" onclick="switchTab(this, 'staff-notes')">
+      <span class="icon">🍱</span><span>B309 午宴控管</span>
+    </div>
+  </div>
+
+  <!-- 分頁一：貴賓抵達名單 -->
+  <div id="staff-vip" class="tab-content active">
+    <div class="content-title">📋 評委與各校老師抵達名單</div>
+    
+    <h3 style="color: var(--navy); margin: 20px 0 10px; font-size: 16px;">🎖️ 評委陣容 (最高優先接待)</h3>
+    
+    <div class="vip-card judge">
+      <div class="vip-header">
+        <div>
+          <div class="vip-name">張幼霖 創辦人</div>
+          <div class="vip-title">NPOchannel公益平台</div>
+        </div>
+        <div class="vip-time">09:00 到達</div>
+      </div>
+      <div class="vip-info">
+        <span>🚗 車牌：5360-YM</span>
+      </div>
+    </div>
+
+    <div class="vip-card judge">
+      <div class="vip-header">
+        <div>
+          <div class="vip-name">李慶芳 教授</div>
+          <div class="vip-title">雲林科技大學企管系</div>
+        </div>
+        <div class="vip-time">09:00 到達</div>
+      </div>
+      <div class="vip-info">
+        <span>🚗 車牌：BZW-1288</span>
+      </div>
+    </div>
+
+    <div class="vip-card judge">
+      <div class="vip-header">
+        <div>
+          <div class="vip-name">周信輝 教授</div>
+          <div class="vip-title">國立成功大學企管系</div>
+        </div>
+        <div class="vip-time">12:00 到達</div>
+      </div>
+      <div class="vip-info">
+        <span>🚗 車牌：BYS-2895</span>
+      </div>
+    </div>
+
+    <div class="vip-card judge">
+      <div class="vip-header">
+        <div>
+          <div class="vip-name">蘇小真 永續長/執行長</div>
+          <div class="vip-title">家樂福暨文教基金會</div>
+        </div>
+        <div class="vip-time">12:00 到達</div>
+      </div>
+      <div class="vip-info">
+        <span>🚄 高鐵 + 計程車</span>
+      </div>
+    </div>
+
+    <div class="vip-card judge">
+      <div class="vip-header">
+        <div>
+          <div class="vip-name">黃昭勇 總監</div>
+          <div class="vip-title">CSR@天下</div>
+        </div>
+        <div class="vip-time">12:00 到達</div>
+      </div>
+      <div class="vip-info">
+        <span>🚄 高鐵 + 計程車</span>
+      </div>
+    </div>
+
+    <h3 style="color: var(--navy); margin: 24px 0 10px; font-size: 16px;">🏫 各校老師陣容</h3>
+    
+    <div class="vip-card">
+      <div class="vip-header">
+        <div>
+          <div class="vip-name">蕭詠璋 教授兼系主任</div>
+          <div class="vip-title">臺南大學 經營與管理學系</div>
+        </div>
+        <div class="vip-time">07:00 到達</div>
+      </div>
+      <div class="vip-info">
+        <span>🚗 自行開車</span>
+      </div>
+    </div>
+
+    <div class="vip-card">
+      <div class="vip-header">
+        <div>
+          <div class="vip-name">涂敏芬 教授</div>
+          <div class="vip-title">淡江大學 企業管理學系</div>
+        </div>
+        <div class="vip-time">09:40 到達</div>
+      </div>
+      <div class="vip-info">
+        <span>🚄 高鐵 + 計程車 (跟學生)</span>
+      </div>
+    </div>
+
+    <div class="vip-card">
+      <div class="vip-header">
+        <div>
+          <div class="vip-name">楊士奇 助理教授</div>
+          <div class="vip-title">中山大學 社會創新研究所</div>
+        </div>
+        <div class="vip-time">09:45 到達</div>
+      </div>
+      <div class="vip-info">
+        <span>🚌 遊覽車 (跟學生)</span>
+      </div>
+    </div>
+
+    <div class="vip-card">
+      <div class="vip-header">
+        <div>
+          <div class="vip-name">康贊清 助理教授</div>
+          <div class="vip-title">靜宜大學 資訊管理學系</div>
+        </div>
+        <div class="vip-time">09:45 到達</div>
+      </div>
+      <div class="vip-info">
+        <span>🚗 自行開車 (車牌：BVE-5701)</span>
+      </div>
+    </div>
+
+    <div class="vip-card">
+      <div class="vip-header">
+        <div>
+          <div class="vip-name">朱彩馨 教授</div>
+          <div class="vip-title">嘉義大學 數位學習設計與管理學系</div>
+        </div>
+        <div class="vip-time">到達時間未定</div>
+      </div>
+      <div class="vip-info">
+        <span>🚗 自行開車 (車牌：Aqz-3527)</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 分頁二：接待專屬細流 -->
+  <div id="staff-schedule" class="tab-content">
+    <div class="content-title">⏰ 接待組專屬行動時間軸</div>
+    <table>
+      <thead>
+        <tr><th>時間</th><th>接待與機動任務</th></tr>
+      </thead>
+      <tbody>
+        <tr class="row-alert">
+          <td class="time-col">08:00 - 09:00</td>
+          <td><b>報到與 B309 佈置</b><br>
+          確認 B309 教室備妥：評分標準資料、活動告知單、領據。<br>
+          ※ 評委簽名後務必收回領據，並說明評委只需確認資訊並在受領人處簽名即可。</td>
+        </tr>
+        <tr>
+          <td class="time-col">09:30 - 10:00</td>
+          <td><b>引導報到</b><br>優先引導評委，次要引導老師，最後才幫忙引導學生。</td>
+        </tr>
+        <tr>
+          <td class="time-col">10:00 - 12:00</td>
+          <td><b>機動待命與拍攝</b><br>隨時待命，聽到「接待評委」指令優先處理。空閒時協助場內拍攝。<br>
+          <span style="color: var(--orange); font-weight: bold;">⚠️ 11:30 務必前往確認便當狀況。</span></td>
+        </tr>
+        <tr class="row-alert">
+          <td class="time-col">12:00 - 12:05</td>
+          <td><b>引導至 B309</b><br>
+          若評委已全數提前到達，則統一引導至 B309 教室。<br>
+          若有評委較晚抵達，先到的評委先引導過去，後續專人接應晚到的評委。</td>
+        </tr>
+        <tr>
+          <td class="time-col">12:05 - 12:55</td>
+          <td><b>評分會議協助</b><br>協助張幼霖創辦人討論評分相關事項。</td>
+        </tr>
+        <tr>
+          <td class="time-col">12:55 - 13:15</td>
+          <td><b>引導回主會場</b><br>引導老師與評委們從 B309 回到啟明苑演藝廳。</td>
+        </tr>
+        <tr>
+          <td class="time-col">13:15 - 14:40</td>
+          <td><b>接待人員輪替用餐</b><br>安排接待組人員於此段時間內輪流吃飯。</td>
+        </tr>
+        <tr class="row-alert">
+          <td class="time-col">14:40 - 15:22</td>
+          <td><b>佈置評分教室</b><br>與陶品涵前往 E302、E303 教室整理座位，準備讓評委賽後討論分數使用。</td>
+        </tr>
+        <tr>
+          <td class="time-col">15:30 - 16:00</td>
+          <td><b>分數結算與引導</b><br>協助處理分數統計作業。結束後引導評委回到演藝廳座位。</td>
+        </tr>
+        <tr>
+          <td class="time-col">16:00 - 17:00</td>
+          <td><b>頒獎協助</b><br>協助司儀遞送獎狀與禮品，順利完成頒獎典禮。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 分頁三：B309 午宴控管 -->
+  <div id="staff-notes" class="tab-content">
+    <div class="content-title">🍱 B309 貴賓午宴控管</div>
+    
+    <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+      <h3 style="color: var(--navy); margin-bottom: 12px; font-size: 16px;">🍽️ B309 用餐名單確認 (全為葷食)</h3>
+      <ul style="list-style: none; padding-left: 0;">
+        <li style="margin-bottom: 8px;">✅ <b>5位評審委員：</b> 張幼霖、李慶芳、周信輝、蘇小真、黃昭勇</li>
+        <li style="margin-bottom: 8px;">✅ <b>特邀嘉賓：</b> 張幼霖創辦人之妻子、楊欽龍</li>
+      </ul>
+      <p style="margin-top: 16px; font-size: 14px; color: var(--text-light); border-top: 1px dashed var(--border); padding-top: 12px;">
+        ※ 請確認 B309 教室內之便當數量是否足夠，並確保用餐環境整潔。
+      </p>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function switchTab(btn, tabId) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
