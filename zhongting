@@ -136,8 +136,11 @@
   .time-col { font-family: 'DM Mono', monospace; color: var(--green); font-weight: 700; width: 105px; white-space: nowrap; }
   .row-alert { background: var(--green-glow); font-weight: 500; }
   
-  /* VIP清單樣式 */
+  /* VIP清單樣式 (加入大頭貼版面) */
   .vip-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -148,11 +151,22 @@
     border-left: 4px solid var(--orange);
     background: var(--orange-glow);
   }
+  .vip-avatar {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: #E5E7EB;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .vip-content { flex: 1; }
   .vip-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
   .vip-name {
     font-size: 16px;
@@ -172,6 +186,7 @@
     font-weight: 700;
     color: var(--orange);
     border: 1px solid var(--orange-light);
+    white-space: nowrap;
   }
   .vip-info {
     font-size: 14px;
@@ -189,6 +204,10 @@
   @media (max-width: 680px) {
     .tabs-nav { gap: 6px; }
     .tab-content { padding: 16px; }
+    /* 手機版調整卡片為直式排列 */
+    .vip-card { flex-direction: column; text-align: center; }
+    .vip-header { flex-direction: column; align-items: center; gap: 8px; }
+    .vip-info { justify-content: center; }
   }
 </style>
 </head>
@@ -225,135 +244,175 @@
     
     <h3 style="color: var(--navy); margin: 20px 0 10px; font-size: 16px;">🎖️ 評委陣容 (最高優先接待)</h3>
     
+    <!-- 評委 1 -->
     <div class="vip-card judge">
-      <div class="vip-header">
-        <div>
-          <div class="vip-name">張幼霖 創辦人</div>
-          <div class="vip-title">NPOchannel公益平台</div>
+      <img src="Pic/judge_5.jpg" alt="張幼霖" class="vip-avatar" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2265%22%20height%3D%2265%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-size%3D%2210%22%20x%3D%2250%25%22%20y%3D%2254%25%22%20text-anchor%3D%22middle%22%3EPHOTO%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <div class="vip-content">
+        <div class="vip-header">
+          <div>
+            <div class="vip-name">張幼霖 創辦人</div>
+            <div class="vip-title">NPOchannel公益平台</div>
+          </div>
+          <div class="vip-time">09:00 到達</div>
         </div>
-        <div class="vip-time">09:00 到達</div>
-      </div>
-      <div class="vip-info">
-        <span>🚗 車牌：5360-YM</span>
+        <div class="vip-info">
+          <span>🚗 車牌：5360-YM</span>
+        </div>
       </div>
     </div>
 
+    <!-- 評委 2 -->
     <div class="vip-card judge">
-      <div class="vip-header">
-        <div>
-          <div class="vip-name">李慶芳 教授</div>
-          <div class="vip-title">雲林科技大學企管系</div>
+      <img src="Pic/judge_1.png" alt="李慶芳" class="vip-avatar" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2265%22%20height%3D%2265%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-size%3D%2210%22%20x%3D%2250%25%22%20y%3D%2254%25%22%20text-anchor%3D%22middle%22%3EPHOTO%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <div class="vip-content">
+        <div class="vip-header">
+          <div>
+            <div class="vip-name">李慶芳 教授</div>
+            <div class="vip-title">雲林科技大學企管系</div>
+          </div>
+          <div class="vip-time">09:00 到達</div>
         </div>
-        <div class="vip-time">09:00 到達</div>
-      </div>
-      <div class="vip-info">
-        <span>🚗 車牌：BZW-1288</span>
+        <div class="vip-info">
+          <span>🚗 車牌：BZW-1288</span>
+        </div>
       </div>
     </div>
 
+    <!-- 評委 3 -->
     <div class="vip-card judge">
-      <div class="vip-header">
-        <div>
-          <div class="vip-name">周信輝 教授</div>
-          <div class="vip-title">國立成功大學企管系</div>
+      <img src="Pic/judge_2.png" alt="周信輝" class="vip-avatar" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2265%22%20height%3D%2265%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-size%3D%2210%22%20x%3D%2250%25%22%20y%3D%2254%25%22%20text-anchor%3D%22middle%22%3EPHOTO%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <div class="vip-content">
+        <div class="vip-header">
+          <div>
+            <div class="vip-name">周信輝 教授</div>
+            <div class="vip-title">國立成功大學企管系</div>
+          </div>
+          <div class="vip-time">12:00 到達</div>
         </div>
-        <div class="vip-time">12:00 到達</div>
-      </div>
-      <div class="vip-info">
-        <span>🚗 車牌：BYS-2895</span>
+        <div class="vip-info">
+          <span>🚗 車牌：BYS-2895</span>
+        </div>
       </div>
     </div>
 
+    <!-- 評委 4 -->
     <div class="vip-card judge">
-      <div class="vip-header">
-        <div>
-          <div class="vip-name">蘇小真 永續長/執行長</div>
-          <div class="vip-title">家樂福暨文教基金會</div>
+      <img src="Pic/judge_3.jpg" alt="蘇筱駗" class="vip-avatar" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2265%22%20height%3D%2265%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-size%3D%2210%22%20x%3D%2250%25%22%20y%3D%2254%25%22%20text-anchor%3D%22middle%22%3EPHOTO%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <div class="vip-content">
+        <div class="vip-header">
+          <div>
+            <div class="vip-name">蘇筱駗 永續長/執行長</div>
+            <div class="vip-title">家樂福暨文教基金會</div>
+          </div>
+          <div class="vip-time">12:00 到達</div>
         </div>
-        <div class="vip-time">12:00 到達</div>
-      </div>
-      <div class="vip-info">
-        <span>🚄 高鐵 + 計程車</span>
+        <div class="vip-info">
+          <span>🚄 高鐵 + 計程車</span>
+        </div>
       </div>
     </div>
 
+    <!-- 評委 5 -->
     <div class="vip-card judge">
-      <div class="vip-header">
-        <div>
-          <div class="vip-name">黃昭勇 總監</div>
-          <div class="vip-title">CSR@天下</div>
+      <img src="Pic/judge_4.png" alt="黃昭勇" class="vip-avatar" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2265%22%20height%3D%2265%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-size%3D%2210%22%20x%3D%2250%25%22%20y%3D%2254%25%22%20text-anchor%3D%22middle%22%3EPHOTO%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <div class="vip-content">
+        <div class="vip-header">
+          <div>
+            <div class="vip-name">黃昭勇 總監</div>
+            <div class="vip-title">CSR@天下</div>
+          </div>
+          <div class="vip-time">12:00 到達</div>
         </div>
-        <div class="vip-time">12:00 到達</div>
-      </div>
-      <div class="vip-info">
-        <span>🚄 高鐵 + 計程車</span>
+        <div class="vip-info">
+          <span>🚄 高鐵 + 計程車</span>
+        </div>
       </div>
     </div>
 
     <h3 style="color: var(--navy); margin: 24px 0 10px; font-size: 16px;">🏫 各校老師陣容</h3>
     
+    <!-- 老師 1 -->
     <div class="vip-card">
-      <div class="vip-header">
-        <div>
-          <div class="vip-name">蕭詠璋 教授兼系主任</div>
-          <div class="vip-title">臺南大學 經營與管理學系</div>
+      <img src="img/teacher_1.jpg" alt="蕭詠璋" class="vip-avatar" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2265%22%20height%3D%2265%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-size%3D%2210%22%20x%3D%2250%25%22%20y%3D%2254%25%22%20text-anchor%3D%22middle%22%3EPHOTO%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <div class="vip-content">
+        <div class="vip-header">
+          <div>
+            <div class="vip-name">蕭詠璋 教授兼系主任</div>
+            <div class="vip-title">臺南大學 經營與管理學系</div>
+          </div>
+          <div class="vip-time">07:00 到達</div>
         </div>
-        <div class="vip-time">07:00 到達</div>
-      </div>
-      <div class="vip-info">
-        <span>🚗 自行開車</span>
+        <div class="vip-info">
+          <span>🚗 自行開車</span>
+        </div>
       </div>
     </div>
 
+    <!-- 老師 2 -->
     <div class="vip-card">
-      <div class="vip-header">
-        <div>
-          <div class="vip-name">涂敏芬 教授</div>
-          <div class="vip-title">淡江大學 企業管理學系</div>
+      <img src="img/teacher_2.jpg" alt="涂敏芬" class="vip-avatar" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2265%22%20height%3D%2265%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-size%3D%2210%22%20x%3D%2250%25%22%20y%3D%2254%25%22%20text-anchor%3D%22middle%22%3EPHOTO%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <div class="vip-content">
+        <div class="vip-header">
+          <div>
+            <div class="vip-name">涂敏芬 教授</div>
+            <div class="vip-title">淡江大學 企業管理學系</div>
+          </div>
+          <div class="vip-time">09:40 到達</div>
         </div>
-        <div class="vip-time">09:40 到達</div>
-      </div>
-      <div class="vip-info">
-        <span>🚄 高鐵 + 計程車 (跟學生)</span>
+        <div class="vip-info">
+          <span>🚄 高鐵 + 計程車 (跟學生)</span>
+        </div>
       </div>
     </div>
 
+    <!-- 老師 3 -->
     <div class="vip-card">
-      <div class="vip-header">
-        <div>
-          <div class="vip-name">楊士奇 助理教授</div>
-          <div class="vip-title">中山大學 社會創新研究所</div>
+      <img src="img/teacher_3.jpeg" alt="楊士奇" class="vip-avatar" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2265%22%20height%3D%2265%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-size%3D%2210%22%20x%3D%2250%25%22%20y%3D%2254%25%22%20text-anchor%3D%22middle%22%3EPHOTO%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <div class="vip-content">
+        <div class="vip-header">
+          <div>
+            <div class="vip-name">楊士奇 助理教授</div>
+            <div class="vip-title">中山大學 社會創新研究所</div>
+          </div>
+          <div class="vip-time">09:45 到達</div>
         </div>
-        <div class="vip-time">09:45 到達</div>
-      </div>
-      <div class="vip-info">
-        <span>🚌 遊覽車 (跟學生)</span>
+        <div class="vip-info">
+          <span>🚌 遊覽車 (跟學生)</span>
+        </div>
       </div>
     </div>
 
+    <!-- 老師 4 -->
     <div class="vip-card">
-      <div class="vip-header">
-        <div>
-          <div class="vip-name">康贊清 助理教授</div>
-          <div class="vip-title">靜宜大學 資訊管理學系</div>
+      <img src="img/teacher_4.jpg" alt="康贊清" class="vip-avatar" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2265%22%20height%3D%2265%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-size%3D%2210%22%20x%3D%2250%25%22%20y%3D%2254%25%22%20text-anchor%3D%22middle%22%3EPHOTO%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <div class="vip-content">
+        <div class="vip-header">
+          <div>
+            <div class="vip-name">康贊清 助理教授</div>
+            <div class="vip-title">靜宜大學 資訊管理學系</div>
+          </div>
+          <div class="vip-time">到達時間未定</div>
         </div>
-        <div class="vip-time">09:45 到達</div>
-      </div>
-      <div class="vip-info">
-        <span>🚗 自行開車 (車牌：BVE-5701)</span>
+        <div class="vip-info">
+          <span>🚗 自行開車 (車牌：BVE-5701)</span>
+        </div>
       </div>
     </div>
 
+    <!-- 老師 5 -->
     <div class="vip-card">
-      <div class="vip-header">
-        <div>
-          <div class="vip-name">朱彩馨 教授</div>
-          <div class="vip-title">嘉義大學 數位學習設計與管理學系</div>
+      <img src="img/teacher_5.jpg" alt="朱彩馨" class="vip-avatar" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2265%22%20height%3D%2265%22%3E%3Crect%20fill%3D%22%23E5E7EB%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%22%239CA3AF%22%20font-size%3D%2210%22%20x%3D%2250%25%22%20y%3D%2254%25%22%20text-anchor%3D%22middle%22%3EPHOTO%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <div class="vip-content">
+        <div class="vip-header">
+          <div>
+            <div class="vip-name">朱彩馨 教授</div>
+            <div class="vip-title">嘉義大學 數位學習設計與管理學系</div>
+          </div>
+          <div class="vip-time">到達時間未定</div>
         </div>
-        <div class="vip-time">到達時間未定</div>
-      </div>
-      <div class="vip-info">
-        <span>🚗 自行開車 (車牌：Aqz-3527)</span>
+        <div class="vip-info">
+          <span>🚗 自行開車 (車牌：Aqz-3527)</span>
+        </div>
       </div>
     </div>
 
@@ -424,6 +483,7 @@
       <h3 style="color: var(--navy); margin-bottom: 12px; font-size: 16px;">🍽️ B309 用餐名單確認 (全為葷食)</h3>
       <ul style="list-style: none; padding-left: 0;">
         <li style="margin-bottom: 8px;">✅ <b>5位評審委員：</b> 張幼霖、李慶芳、周信輝、蘇小真、黃昭勇</li>
+        <li style="margin-bottom: 8px;">✅ <b>5校指導老師：</b> 蕭詠璋、涂敏芬、楊士奇、康贊清、朱彩馨</li>
         <li style="margin-bottom: 8px;">✅ <b>特邀嘉賓：</b> 張幼霖創辦人之妻子、楊欽龍</li>
       </ul>
       <p style="margin-top: 16px; font-size: 14px; color: var(--text-light); border-top: 1px dashed var(--border); padding-top: 12px;">
