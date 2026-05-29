@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>2026 挺好 Campus | 上帝視角全知總控板</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #050505;
+    --surface: #111318;
+    --surface-light: #1A1D24;
+    --text-main: #F8FAFC;
+    --text-muted: #94A3B8;
+    --border: #2A2E39;
+    --gold: #EAB308;
+    --gold-glow: rgba(234, 179, 8, 0.15);
+    --red: #EF4444;
+    --blue: #3B82F6;
+    --green: #10B981;
+    --purple: #8B5CF6;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-main);
+    line-height: 1.6;
+    padding: 12px;
+    padding-bottom: 80px;
+    font-size: 14px;
+  }
+  
+  .container { max-width: 1000px; margin: 0 auto; }
+
+  /* 頂部全知橫幅 */
+  .master-header {
+    background: linear-gradient(135deg, #1A1D24 0%, #000000 100%);
+    border: 1px solid var(--border);
+    border-left: 6px solid var(--gold);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .master-header h1 { font-size: 22px; font-weight: 900; color: var(--gold); margin-bottom: 4px; }
+  .master-header p { color: var(--text-muted); font-size: 13px; }
+  .god-badge {
+    position: absolute; top: 16px; right: 16px;
+    background: var(--red); color: white; padding: 4px 10px;
+    border-radius: 8px; font-size: 11px; font-weight: 900; letter-spacing: 1px;
+  }
+
+  /* 導覽列 (Sticky) */
+  .tabs-nav {
+    display: flex; gap: 6px; overflow-x: auto;
+    margin-bottom: 16px; position: sticky; top: 0; z-index: 100;
+    background: rgba(5,5,5,0.9); padding: 8px 0; backdrop-filter: blur(8px);
+  }
+  .tabs-nav::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 10px 14px; border-radius: 8px; cursor: pointer;
+    font-size: 13px; font-weight: 700; color: var(--text-muted);
+    white-space: nowrap; display: flex; align-items: center; gap: 6px;
+  }
+  .tab-btn.active { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
+
+  /* 內容區塊 */
+  .tab-content { display: none; animation: fadeIn 0.3s ease; }
+  .tab-content.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* 通用卡片與表格 */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px; margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 16px; font-weight: 900; color: white; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid var(--border); padding-bottom: 8px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--text-muted); font-weight: 500; background: var(--surface-light); }
+  .t-time { font-family: 'DM Mono', monospace; color: var(--blue); width: 95px; font-weight: 700; }
+  
+  /* 特殊標籤 */
+  .tag { padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; display: inline-block; margin-bottom: 4px; }
+  .tag.red { background: rgba(239,68,68,0.2); color: #FCA5A5; border: 1px solid var(--red); }
+  .tag.gold { background: rgba(234,179,8,0.2); color: #FDE047; border: 1px solid var(--gold); }
+  .tag.green { background: rgba(16,185,129,0.2); color: #6EE7B7; border: 1px solid var(--green); }
+
+  /* 任務清單 */
+  .task-list { list-style: none; padding-left: 0; }
+  .task-list li { margin-bottom: 8px; padding-left: 16px; position: relative; color: #E2E8F0; }
+  .task-list li::before { content: '▪'; position: absolute; left: 0; color: var(--gold); }
+  
+  /* 清單核取 */
+  .check-item { display: flex; gap: 10px; margin-bottom: 8px; align-items: flex-start; border-bottom: 1px dashed var(--border); padding-bottom: 8px; }
+  .check-item input { margin-top: 3px; accent-color: var(--gold); }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="master-header">
+    <div class="god-badge">GOD MODE</div>
+    <h1>挺好 Campus 全知總控板</h1>
+    <p>王羿龍 專屬 ｜ 掌控全場人、事、時、地、物</p>
+  </div>
+
+  <div class="tabs-nav">
+    <div class="tab-btn active" onclick="switchTab(this, 'tab-action')">🔥 羿龍核心行動</div>
+    <div class="tab-btn" onclick="switchTab(this, 'tab-timeline')">⏰ 全日微細流</div>
+    <div class="tab-btn" onclick="switchTab(this, 'tab-vip')">🚘 貴賓與陣容</div>
+    <div class="tab-btn" onclick="switchTab(this, 'tab-bento')">🍱 便當與金流</div>
+    <div class="tab-btn" onclick="switchTab(this, 'tab-score')">🏆 計分與頒獎</div>
+    <div class="tab-btn" onclick="switchTab(this, 'tab-equip')">🧰 物資總表</div>
+  </div>
+
+  <div id="tab-action" class="tab-content active">
+    <div class="card" style="border-color: var(--red);">
+      <div class="card-title" style="color: #FCA5A5;">🚨 總控絕對不可遺漏之節點</div>
+      <ul class="task-list">
+        <li><span class="tag gold">11:30 盯哨</span> 確認品涵、艾倫、廷萱已將 12份 VIP便當 分出，並交給仲婷/慶灣。</li>
+        <li><span class="tag green">12:00 收款</span> 嘉義大學助教會抵達，<b>親自向嘉大收取便當費 $2,020 元</b>。</li>
+        <li><span class="tag blue">13:15 盯哨</span> 確認所有人回場，提示司儀開幕，抓緊時間讓攝影拍下午場大合照。</li>
+        <li><span class="tag gold">13:40 控時</span> 親自監控 17 組計時。<b>4分短鈴舉牌，5分長鈴直接切麥</b>，絕不妥協。</li>
+        <li><span class="tag blue">發放</span> 在「永續模式、公益實踐、創意突破」各獎項發表開始前，與品涵配合發放該組評分表給評委。</li>
+        <li><span class="tag red">15:22 衝刺</span> 發表結束！<b>立刻收齊所有評分表，衝上 B302 結算室。</b></li>
+        <li><span class="tag gold">B302 結算</span> 張幼霖主持討論，您與廷萱、艾倫、品涵火速製作簡報。確認無誤後衝下樓通知司儀。</li>
+        <li><span class="tag blue">16:15 頒獎</span> 在台側控管禮品（小書、獎狀），確認司儀唱名正確，引導拍照。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="tab-timeline" class="tab-content">
+    <div class="card">
+      <div class="card-title">⏰ 08:00 - 13:40 上午與開幕</div>
+      <table>
+        <tr><td class="t-time">08:00</td><td><b>【場佈與預演】</b>南大全員報到。測試麥克風、PPT、相機、錄音筆。</td></tr>
+        <tr><td class="t-time">08:50</td><td><b>【淡江抵達】</b>陳姵陵(測設備)、曾盈雨/林雅雯/温蓮忻(簽到/海報/禮品)。</td></tr>
+        <tr><td class="t-time">09:30</td><td><b>【來賓報到】</b>實體簽到。仲婷全力負責評委接待。</td></tr>
+        <tr><td class="t-time">10:00</td><td><b>【上午開幕】</b>司儀開場，黃瑞茂致詞，上午場大合照 (攝影振宇注意)。</td></tr>
+        <tr><td class="t-time">10:15</td><td><b>【教師發表】</b>蕭詠璋、楊士奇、康贊清、朱彩馨、涂敏芬 輪流發表。</td></tr>
+        <tr><td class="t-time">11:15</td><td><b>【交流座談】</b>教師QA，黃瑞茂致贈淡水伴手禮給講者。</td></tr>
+        <tr><td class="t-time">11:30</td><td><b>【便當前置】</b>機動組(品涵/艾倫/廷萱)需在此時拿到便當並分裝完畢。</td></tr>
+        <tr><td class="t-time">12:00</td><td><b>【午餐放飯】</b><br>VIP: 引導至 B309。<br>南大: E302/E303。<br>淡江/嘉大: F101。<br>中山/靜宜: F103。</td></tr>
+        <tr><td class="t-time">13:15</td><td><b>【下午開幕】</b>創辦人張幼霖致詞(10m) ➔ 評審介紹(5m) ➔ <b>下午大合照</b>。</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⏱️ 13:40 - 15:22 決賽發表 (嚴格5分+1分)</div>
+      <table>
+        <tr><td colspan="2"><span class="tag gold">永續模式獎 (4組)</span></td></tr>
+        <tr><td class="t-time">13:40-13:46</td><td>淡江｜「食」現夢想家</td></tr>
+        <tr><td class="t-time">13:46-13:52</td><td>南大｜用愛翻轉未來</td></tr>
+        <tr><td class="t-time">13:52-13:58</td><td>南大｜微光種子</td></tr>
+        <tr><td class="t-time">13:58-14:04</td><td>嘉大｜行動支Food</td></tr>
+        <tr><td colspan="2"><span class="tag green">公益實踐獎 (6組)</span></td></tr>
+        <tr><td class="t-time">14:04-14:10</td><td>嘉大｜集食點光</td></tr>
+        <tr><td class="t-time">14:10-14:16</td><td>南大｜食在有愛</td></tr>
+        <tr><td class="t-time">14:16-14:22</td><td>淡江｜滬食行動</td></tr>
+        <tr><td class="t-time">14:22-14:28</td><td>靜宜｜糕興遇見你</td></tr>
+        <tr><td class="t-time">14:28-14:34</td><td>嘉大｜湯心比心｜NGO集食計畫</td></tr>
+        <tr><td class="t-time">14:34-14:40</td><td>中山｜第二組</td></tr>
+        <tr><td colspan="2"><span class="tag blue">創意突破獎 (7組)</span></td></tr>
+        <tr><td class="t-time">14:40-14:46</td><td>中山｜資產支配者 <small style="color:var(--gold);">(14:40 品涵上B302排電腦)</small></td></tr>
+        <tr><td class="t-time">14:46-14:52</td><td>嘉大｜豆米愛心實驗室</td></tr>
+        <tr><td class="t-time">14:52-14:58</td><td>嘉大｜i不釋手</td></tr>
+        <tr><td class="t-time">14:58-15:04</td><td>南大｜集食救援</td></tr>
+        <tr><td class="t-time">15:04-15:10</td><td>靜宜｜母愛送糕家</td></tr>
+        <tr><td class="t-time">15:10-15:16</td><td>南大｜小事大愛</td></tr>
+        <tr><td class="t-time">15:16-15:22</td><td>嘉大｜餐餐童樂 HealMeal</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="tab-vip" class="tab-content">
+    <div class="card">
+      <div class="card-title">🎖️ 評委陣容 (VIP 第一優先接待)</div>
+      <table>
+        <tr><th>姓名</th><th>單位</th><th>時間</th><th>車牌/交通</th></tr>
+        <tr><td>張幼霖 創辦人</td><td>NPOchannel</td><td>09:00</td><td>5360-YM</td></tr>
+        <tr><td>李慶芳 教授</td><td>雲林科技大學</td><td>09:00</td><td>BZW-1288</td></tr>
+        <tr><td>周信輝 教授</td><td>國立成功大學</td><td>12:00</td><td>BYS-2895</td></tr>
+        <tr><td>蘇小真 執行長</td><td>家樂福基金會</td><td>12:00</td><td>高鐵+計程車</td></tr>
+        <tr><td>黃昭勇 總監</td><td>CSR@天下</td><td>12:00</td><td>高鐵+計程車</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏫 五校老師與嘉賓</div>
+      <table>
+        <tr><th>姓名</th><th>單位</th><th>時間</th><th>車牌/交通</th></tr>
+        <tr><td>蕭詠璋 主任</td><td>臺南大學</td><td>07:00</td><td>自行開車</td></tr>
+        <tr><td>涂敏芬 教授</td><td>淡江大學</td><td>09:40</td><td>高鐵(跟學生)</td></tr>
+        <tr><td>楊士奇 教授</td><td>中山大學</td><td>09:45</td><td>遊覽車(跟學生)</td></tr>
+        <tr><td>康贊清 教授</td><td>靜宜大學</td><td>未定</td><td>BVE-5701</td></tr>
+        <tr><td>朱彩馨 教授</td><td>嘉義大學</td><td>未定</td><td>Aqz-3527</td></tr>
+        <tr><td colspan="4" style="color:var(--text-muted); font-size:12px;">※ 另有兩位嘉賓：張幼霖妻子、楊欽龍</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">👥 工作人員守備圖</div>
+      <ul class="task-list">
+        <li><b>王羿龍：</b> 全場總指揮、控時、B302計分、金流。</li>
+        <li><b>鄭仲婷：</b> VIP 貼身接待、引導 B309 午宴與 B302 計分。</li>
+        <li><b>吳振宇：</b> 內場主攝影、錄音錄影控管。</li>
+        <li><b>古月縈 / 柯慶灣：</b> 司儀主麥 / 遞麥克風、簡報筆、協助送禮。</li>
+        <li><b>陶品涵：</b> 開教室冷氣、分發評分表、B302 設備架設。</li>
+        <li><b>江艾倫：</b> 管 F101 (淡/嘉)、場內拍攝支援、B302 做 PPT。</li>
+        <li><b>鄭廷萱：</b> 管 F103 (中/靜)、場內拍攝支援、B302 做 PPT。</li>
+        <li><b>淡江夥伴：</b> 姵陵(設備)、盈雨/雅雯/蓮忻(簽到、海報、伴手禮)。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="tab-bento" class="tab-content">
+    <div class="card">
+      <div class="card-title" style="color: var(--gold);">💰 總控財務代收表</div>
+      <table style="margin-bottom: 12px;">
+        <tr><th>單位</th><th>總額</th><th>狀態</th></tr>
+        <tr><td>淡江大學 (艾倫處理)</td><td style="color:var(--gold); font-weight:bold;">$3,100</td><td>待收</td></tr>
+        <tr><td>中山大學 (廷萱處理)</td><td style="color:var(--gold); font-weight:bold;">$1,750</td><td>待收</td></tr>
+        <tr><td>嘉義大學 (12:00 羿龍收)</td><td style="color:var(--gold); font-weight:bold;">$2,020</td><td>待收</td></tr>
+        <tr><td>靜宜大學 (廷萱處理)</td><td style="color:var(--gold); font-weight:bold;">$400</td><td>待收</td></tr>
+        <tr style="background: rgba(255,255,255,0.05);">
+          <td style="font-weight:900;">總代收金額</td>
+          <td colspan="2" style="color:var(--red); font-weight:900; font-size:16px;">NT$ 7,270</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🍱 全場便當終極明細表</div>
+      
+      <div style="margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+        <span class="tag red">B309 & 休息室 (11:30 仲婷/慶灣帶走)</span><br>
+        <span style="color: #cbd5e1; font-size: 13px;">評委 5份 + 老師 5份 + 嘉賓 2份 = <b>共 12 份全葷</b>。</span>
+      </div>
+
+      <div style="margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+        <span class="tag blue">淡江大學 (22葷) - F101</span><br>
+        <span style="color: var(--text-muted); font-size: 13px;">
+          舒肥雞腿排：香辣*1, 玫瑰鹽*8, 義式香草*6, 黑胡椒*6<br>
+          舒肥松板豬*1
+        </span>
+      </div>
+
+      <div style="margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+        <span class="tag green">嘉義大學 (19葷1素) - F101</span><br>
+        <span style="color: var(--text-muted); font-size: 13px;">
+          臺式*4, 炸排骨*13, 炸魚排*2, 素食*1
+        </span>
+      </div>
+
+      <div style="margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+        <span class="tag gold">中山大學 (14葷1素) - F103</span><br>
+        <span style="color: var(--text-muted); font-size: 13px;">
+          大臺式*11, 舒肥嫩雞胸*2, 嫩煎巴沙魚*1, 素食*1
+        </span>
+      </div>
+
+      <div style="margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+        <span class="tag purple">靜宜大學 (4葷) - F103</span><br>
+        <span style="color: var(--text-muted); font-size: 13px;">臺式*4</span>
+      </div>
+
+      <div>
+        <span class="tag">臺南大學 (52葷1素) - E302/E303</span><br>
+        <span style="color: var(--text-muted); font-size: 13px;">大臺式*52, 素食*1</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-score" class="tab-content">
+    <div class="card">
+      <div class="card-title">🏆 15:22 後 B302 結算與頒獎戰術</div>
+      <ul class="task-list">
+        <li>14:40 品涵與仲婷先去 B302 設置 5 張桌子與 3 台連網電腦。</li>
+        <li>15:22 發表完畢，羿龍拿評分表上樓，仲婷帶評委上樓。艾倫、廷萱在電腦前待命。</li>
+        <li>張幼霖帶領評委確認成績。</li>
+        <li>仲婷將評委帶回演藝廳，羿龍/艾倫/廷萱/品涵光速製作 PPT。</li>
+        <li>做完後下樓，通知司儀準備開始頒獎典禮。</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🎁 頒獎對應與發放清單</div>
+      <table>
+        <tr><th>獎項</th><th>頒發者</th><th>攝影指示</th></tr>
+        <tr><td>全體教師感謝狀</td><td>張幼霖</td><td>全體老師在台上「合拍1張」</td></tr>
+        <tr><td>公益成果獎</td><td>李慶芳 教授</td><td>該得獎團隊合拍</td></tr>
+        <tr><td>創意突破獎</td><td>周信輝 教授</td><td>該得獎團隊合拍</td></tr>
+        <tr><td>公益實踐獎</td><td>蘇小真 執行長</td><td>該得獎團隊合拍</td></tr>
+        <tr><td>永續模式獎</td><td>黃昭勇 總監</td><td>該得獎團隊合拍</td></tr>
+        <tr><td colspan="3" style="color:var(--text-muted);">
+          <b>禮品準備：</b><br>
+          老師：感謝狀。<br>
+          學生得獎隊伍：大會獎狀 + 物品小書 + 56份張幼霖寄送物資 + 9份淡味選物籃。
+        </td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="tab-equip" class="tab-content">
+    <div class="card">
+      <div class="card-title">🧰 南大攜帶物資總點檢表</div>
+      
+      <div class="check-item"><input type="checkbox"><div><b>電子設備：</b> 筆電*1, HUB*1, 隨身碟*1, 延長線*1</div></div>
+      <div class="check-item"><input type="checkbox"><div><b>影音器材：</b> SONY相機/充電器/鏡頭*1, 錄影機/腳架*1, 記憶卡*4, 錄音筆*1, 簡報筆*1</div></div>
+      <div class="check-item"><input type="checkbox"><div><b>文具用品：</b> 筆、奇異筆、紙膠帶(定位用)、剪刀</div></div>
+      <div class="check-item"><input type="checkbox"><div><b>行政文件：</b> 評委領據/回郵信封*4, 四校領據*4</div></div>
+      <div class="check-item"><input type="checkbox"><div><b>紙本印刷：</b> 座位圖、工作分配表、指引圖、各校座位、評分表+流程(10份)、來賓簽到表、嘉大印刷物</div></div>
+      <div class="check-item"><input type="checkbox"><div><b>禮品物資：</b> 張幼霖寄送物資(56份/給學生), 挺好禮物*9(評審4/老師5), 感謝狀</div></div>
+      <div class="check-item"><input type="checkbox"><div><b>淡江支援確認：</b> 相機/電池, 現金, 領據簽到單, 主持人T恤, 伴手禮組裝</div></div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function switchTab(btn, tabId) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
