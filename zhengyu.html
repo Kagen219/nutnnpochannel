@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>2026 挺好 Campus | 主攝影專屬行動看板</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0284C7; /* 海洋藍，專注穩重 */
+    --primary-light: #38BDF8;
+    --primary-glow: rgba(2, 132, 199, 0.08);
+    --navy: #0F172A; /* 深灰藍 */
+    --navy-light: #1E293B;
+    --bg: #F8FAFC;
+    --surface: #FFFFFF;
+    --text: #1E293B;
+    --text-light: #475569;
+    --muted: #94A3B8;
+    --border: #E2E8F0;
+    --orange: #F97316;
+    --orange-glow: rgba(249, 115, 22, 0.1);
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 20px;
+    padding-bottom: 60px;
+  }
+  
+  .container { max-width: 900px; margin: 0 auto; }
+
+  /* 頂部橫幅 */
+  .header {
+    text-align: center;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--primary) 100%);
+    color: white;
+    padding: 30px 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 900;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+    color: #E0F2FE;
+  }
+  .header p { color: #CBD5E1; font-size: 14px; letter-spacing: 1px; }
+
+  /* 頂部拍攝重點 (取代原本的防呆警告) */
+  .alert-top-card {
+    background: var(--surface);
+    border-left: 5px solid var(--orange);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+  }
+  .alert-top-card h3 {
+    font-size: 17px;
+    color: var(--orange);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .alert-top-card p { font-size: 14.5px; color: var(--text-light); }
+
+  /* 切換按鈕組 (改為兩個場次與一個重點守則) */
+  .tabs-nav {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .tab-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 12px 6px;
+    text-align: center;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--text-light);
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .tab-btn span.icon { font-size: 18px; }
+  .tab-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+  /* 分頁卡片 */
+  .tab-content {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    animation: fadeIn 0.3s ease;
+  }
+  .tab-content.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  .content-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--bg);
+  }
+
+  /* 流程表樣式 */
+  .timeline-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .timeline-item {
+    background: var(--bg);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  /* 重大拍攝節點標示 */
+  .timeline-item.important {
+    border-left: 4px solid var(--orange);
+    background: var(--orange-glow);
+  }
+  .time-badge {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    font-family: 'DM Mono', monospace;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .timeline-item.important .time-badge { background: var(--orange); }
+  
+  .item-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .item-desc {
+    font-size: 14px;
+    color: var(--text-light);
+  }
+
+  /* 提示重點區塊 */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .tip-box {
+    background: var(--bg);
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--primary);
+  }
+  .tip-box h4 {
+    color: var(--primary);
+    margin-bottom: 6px;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .tip-box p {
+    font-size: 14px;
+    color: var(--text-light);
+  }
+
+  @media (max-width: 680px) {
+    .tabs-nav { gap: 6px; }
+    .tab-content { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="header">
+    <h1>🎥 挺好 Campus 拍攝總控板</h1>
+    <p>主攝影專屬行動指引 ｜ 負責人：吳振宇</p>
+  </div>
+
+  <div class="alert-top-card">
+    <h3>📸 全日拍攝核心任務</h3>
+    <p>器材與備品皆已備妥完畢，今天只需全心專注於<b>畫面的捕捉與錄製</b>！請特別留意司儀引導的各階段「大合照」與「頒獎瞬間」，並為 17 組登台發表的同學留下精美的特寫與廣角紀錄照。</p>
+  </div>
+
+  <div class="tabs-nav">
+    <div class="tab-btn active" onclick="switchTab(this, 'av-morning')">
+      <span class="icon">☀️</span><span>上午場流程</span>
+    </div>
+    <div class="tab-btn" onclick="switchTab(this, 'av-afternoon')">
+      <span class="icon">🏆</span><span>下午場流程</span>
+    </div>
+    <div class="tab-btn" onclick="switchTab(this, 'av-rules')">
+      <span class="icon">🎯</span><span>構圖與走位</span>
+    </div>
+  </div>
+
+  <!-- 分頁一：上午場拍攝流程 -->
+  <div id="av-morning" class="tab-content active">
+    <div class="content-title">☀️ 上午場：USR SIG 教師交流 (08:00 - 12:00)</div>
+    
+    <div class="timeline-list">
+      <div class="timeline-item">
+        <div class="time-badge">08:00 - 09:30</div>
+        <div class="item-title">場地確認與準備</div>
+        <div class="item-desc">腳架定位、錄影錄音就位測試。捕捉少數工作人員場佈與淡江團隊張貼海報的幕後畫面。</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time-badge">09:30 - 10:00</div>
+        <div class="item-title">報到花絮</div>
+        <div class="item-desc">至報到處拍攝師長、評委與學生進場互動的輕鬆花絮。</div>
+      </div>
+
+      <div class="timeline-item important">
+        <div class="time-badge">10:00 - 10:15</div>
+        <div class="item-title">⭐️ 上午場大合照 (重要)</div>
+        <div class="item-desc">司儀開場並邀請黃瑞茂教授致詞後，會引導全體進行大合照。請提前至舞台正中央卡位，確保無人臉部被遮擋。</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time-badge">10:15 - 11:15</div>
+        <div class="item-title">五校教師發表</div>
+        <div class="item-desc">相機重點捕捉五位老師 (蕭詠璋、楊士奇、康贊清、朱彩馨、涂敏芬) 演講時的臉部特寫及手勢，並拍攝 2-3 張全場聽眾專注聽講的廣角照。</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time-badge">11:15 - 12:00</div>
+        <div class="item-title">交流座談與致贈禮物</div>
+        <div class="item-desc">拍攝 QA 提問者與講者互動。結束前，黃瑞茂教授將頒贈「淡水伴手禮」給講者，請上前捕捉致贈與合影瞬間。</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time-badge">12:00 - 13:15</div>
+        <div class="item-title">午餐與貴賓交流捕捉</div>
+        <div class="item-desc">前往 B309 拍攝評審與老師們餐敘互動的自然畫面。完成後即可休息並整理上午檔案。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 分頁二：下午場拍攝流程 -->
+  <div id="av-afternoon" class="tab-content">
+    <div class="content-title">🏆 下午場：決賽發表與頒獎 (13:15 - 17:00)</div>
+    
+    <div class="timeline-list">
+      <div class="timeline-item important">
+        <div class="time-badge">13:15 - 13:40</div>
+        <div class="item-title">⭐️ 開幕致詞與下午場大合照 (重要)</div>
+        <div class="item-desc">拍攝張幼霖創辦人致詞。接著司儀將介紹評審團並邀請全場進行大合照，此張合照涵蓋 17 組學生，請使用最廣角端拍攝。</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time-badge">13:40 - 15:22</div>
+        <div class="item-title">17組學生連續發表錄影</div>
+        <div class="item-desc">錄影機維持不中斷。相機請每組拍攝 2-3 張<b>「演講者特寫」</b>以及<b>「演講者與背後簡報同框照」</b>。</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time-badge">15:22 - 16:15</div>
+        <div class="item-title">休息與教師感謝狀頒發</div>
+        <div class="item-desc">16:10 左右司儀將邀請老師上台頒發教師感謝狀，請準備拍攝頒獎合影。</div>
+      </div>
+
+      <div class="timeline-item important">
+        <div class="time-badge">16:15 - 17:00</div>
+        <div class="item-title">⭐️ 四大獎項頒獎典禮 (絕對重點)</div>
+        <div class="item-desc">
+          依序拍攝以下四位評委的講評與頒發瞬間：<br>
+          1. 李慶芳 教授 頒發 <b>公益成果獎</b><br>
+          2. 周信輝 教授 頒發 <b>創意突破獎</b><br>
+          3. 蘇小真 執行長 頒發 <b>公益實踐獎</b><br>
+          4. 黃昭勇 總監 頒發 <b>永續模式獎</b>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time-badge">17:00 之後</div>
+        <div class="item-title">大會閉幕散場</div>
+        <div class="item-desc">拍攝活動落幕的歡樂畫面、學生自主合照花絮等。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 分頁三：拍攝重點守則 -->
+  <div id="av-rules" class="tab-content">
+    <div class="content-title">🎯 攝影走位與構圖守則</div>
+    
+    <div class="tips-grid">
+      <div class="tip-box">
+        <h4>📸 大合照構圖要求</h4>
+        <p>全場大合照人數眾多（涵蓋 5 所大學師生），請盡量拉廣角，確保「挺好 Campus」的背板或螢幕字樣完整入鏡。前排下蹲，後排錯開，按下快門前務必連拍數張以防閉眼。</p>
+      </div>
+      
+      <div class="tip-box">
+        <h4>🎥 頒獎動態抓拍</h4>
+        <p>當評審將獎狀與禮物遞給學生時，是最關鍵的畫面！請引導他們「看鏡頭停留 3 秒鐘」，不要急著下台，確保照片清晰不模糊。</p>
+      </div>
+      
+      <div class="tip-box">
+        <h4>🏃 攝影走位：不阻擋評委視線</h4>
+        <p>學生的上下台動線為「右側上、左側下」。請利用長焦鏡頭在舞台側邊或走道蹲低拍攝特寫，<b>嚴禁直接站在舞台正中央長時間阻擋評委與觀眾的視線</b>。</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function switchTab(btn, tabId) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
