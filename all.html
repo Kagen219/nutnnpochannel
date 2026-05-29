@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>2026 挺好 Campus | 機動與場外專屬任務板</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #6366F1;
+    --primary-light: #818CF8;
+    --primary-glow: rgba(99, 102, 241, 0.08);
+    --navy: #1E1B4B;
+    --bg: #F8FAFC;
+    --surface: #FFFFFF;
+    --text: #1E293B;
+    --text-light: #475569;
+    --muted: #94A3B8;
+    --border: #E2E8F0;
+    --orange: #F97316;
+    --orange-glow: rgba(249, 115, 22, 0.1);
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 20px;
+    padding-bottom: 60px;
+  }
+  
+  .container { max-width: 900px; margin: 0 auto; }
+
+  .header {
+    text-align: center;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--primary) 100%);
+    color: white;
+    padding: 30px 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 900;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+    color: #E0E7FF;
+  }
+  .header p { color: #C7D2FE; font-size: 14px; letter-spacing: 1px; }
+
+  /* 切換按鈕組 (四欄) */
+  .tabs-nav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .tab-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 12px 4px;
+    text-align: center;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-light);
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .tab-btn span.icon { font-size: 18px; }
+  .tab-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+  /* 分頁卡片 */
+  .tab-content {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    animation: fadeIn 0.3s ease;
+  }
+  .tab-content.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  .content-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--bg);
+  }
+
+  /* 流程表樣式 */
+  .timeline-list { display: flex; flex-direction: column; gap: 14px; }
+  .timeline-item {
+    background: var(--bg);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 16px;
+  }
+  .timeline-item.important { border-left: 4px solid var(--orange); background: var(--orange-glow); }
+  .time-badge {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    font-family: 'DM Mono', monospace;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .timeline-item.important .time-badge { background: var(--orange); }
+  .item-title { font-size: 15.5px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .item-desc { font-size: 14px; color: var(--text-light); }
+
+  /* 便當表格 */
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; vertical-align: top; }
+  th { background: var(--primary-glow); color: var(--navy); font-weight: 700; }
+  .highlight-row { background: #FFFBEB; }
+  .price-text { color: var(--orange); font-weight: 700; font-family: 'DM Mono', monospace; font-size: 15px;}
+  .food-list { list-style: none; padding-left: 0; margin-top: 4px; font-size: 13.5px; color: var(--text-light); }
+  .food-list li { margin-bottom: 2px; }
+
+  /* 提示重點區塊 */
+  .tip-box {
+    background: var(--bg);
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .tip-box.alert { border-left: 4px solid var(--orange); }
+  .tip-box h4 { color: var(--primary); margin-bottom: 6px; font-size: 15px; font-weight: 700; }
+  .tip-box.alert h4 { color: var(--orange); }
+  .tip-box p { font-size: 14px; color: var(--text-light); }
+
+  @media (max-width: 680px) {
+    .tabs-nav { grid-template-columns: repeat(4, 1fr); gap: 4px; }
+    .tab-btn { font-size: 13px; padding: 10px 2px; }
+    .tab-content { padding: 16px; }
+    th, td { padding: 10px 8px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="header">
+    <h1>🚀 挺好 Campus 機動總控板</h1>
+    <p>場外、便當、計分與攝影機動指引</p>
+  </div>
+
+  <div class="tabs-nav">
+    <div class="tab-btn active" onclick="switchTab(this, 'pinhan')">
+      <span class="icon">👧</span><span>陶品涵</span>
+    </div>
+    <div class="tab-btn" onclick="switchTab(this, 'allen')">
+      <span class="icon">👦</span><span>江艾倫</span>
+    </div>
+    <div class="tab-btn" onclick="switchTab(this, 'tingxuan')">
+      <span class="icon">👧</span><span>鄭廷萱</span>
+    </div>
+    <div class="tab-btn" onclick="switchTab(this, 'bento')">
+      <span class="icon">🍱</span><span>便當明細</span>
+    </div>
+  </div>
+
+  <div id="pinhan" class="tab-content active">
+    <div class="content-title">👧 陶品涵 專屬行動時間軸</div>
+    <div class="timeline-list">
+      <div class="timeline-item">
+        <div class="time-badge">11:00 之前</div>
+        <div class="item-title">開啟教室與空調</div>
+        <div class="item-desc">前往 E302、E303 等教室開門，並提前開啟冷氣預冷。</div>
+      </div>
+      <div class="timeline-item important">
+        <div class="time-badge">11:00 - 11:30</div>
+        <div class="item-title">便當領取與重要分類</div>
+        <div class="item-desc">11:00 領取「富仁屋」便當；11:30 領取「另一家廠商」便當。<br>
+        <b>🚨 首要任務：</b> 在 11:30 前，務必將「評審(B309)」與「五校老師+嘉賓(休息室)」的餐點整理好，交給仲婷與慶灣帶走。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time-badge">11:30 - 11:50</div>
+        <div class="item-title">機動組提早用餐</div>
+        <div class="item-desc">完成便當分類後，請抓緊時間先去吃飯，務必於 11:50 回到崗位。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time-badge">11:50 - 13:15</div>
+        <div class="item-title">引導南大用餐 (E302, E303)</div>
+        <div class="item-desc">負責引導臺南大學師生進入 E302、E303 教室用餐。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time-badge">13:15 - 14:40</div>
+        <div class="item-title">評分表派發與回收</div>
+        <div class="item-desc">配合王羿龍，在每一個獎項「開始前」發放評分表給評委，並於該獎項「結束時」立即收回。</div>
+      </div>
+      <div class="timeline-item important">
+        <div class="time-badge">14:40 佈置</div>
+        <div class="item-title">B302 計分室架設</div>
+        <div class="item-desc">與仲婷上樓整理 B302。在前方放置 5 張評委桌子，並架設 3 台電腦（開機並連上網路，供稍後做簡報用）。佈置完畢後下樓。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time-badge">15:22 發表結束</div>
+        <div class="item-title">計分與簡報協助</div>
+        <div class="item-desc">王羿龍將評分表收齊上樓，仲婷帶評委上樓。待評委確認分數沒問題並離開後，協助艾倫與廷萱設計頒獎簡報。完成後下樓通知王羿龍與司儀。</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="allen" class="tab-content">
+    <div class="content-title">👦 江艾倫 專屬行動時間軸</div>
+    <div class="timeline-list">
+      <div class="timeline-item">
+        <div class="time-badge">11:00 之前</div>
+        <div class="item-title">場內拍攝與交接</div>
+        <div class="item-desc">協助會場內拍照。<b>11:00 整，務必將相機交接給慶灣和仲婷。</b></div>
+      </div>
+      <div class="timeline-item important">
+        <div class="time-badge">11:00 - 11:30</div>
+        <div class="item-title">便當領取與重要分類</div>
+        <div class="item-desc">與品涵、廷萱一起領取兩家廠商便當。優先將「評審」與「老師嘉賓」的便當分出交給仲婷與慶灣。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time-badge">11:30 - 11:50</div>
+        <div class="item-title">機動組提早用餐</div>
+        <div class="item-desc">完成分類後去吃飯，11:50 準時回到崗位。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time-badge">11:50 - 13:15</div>
+        <div class="item-title">引導用餐 (F101)</div>
+        <div class="item-desc">負責管理 F101 教室。引導「淡江大學」、「嘉義大學」及「早上活動參與者」入內用餐。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time-badge">13:15 - 15:22</div>
+        <div class="item-title">暫時協助拍照</div>
+        <div class="item-desc">回到會場協助攝影，特別注意<b>「每一次的大合照都必須拍到」</b>。（結語與禮品部分由王羿龍、慶灣負責，您專注拍照）。</div>
+      </div>
+      <div class="timeline-item important">
+        <div class="time-badge">15:22 發表結束</div>
+        <div class="item-title">B302 簡報設計待命</div>
+        <div class="item-desc">立刻前往 B302 的 3 台電腦前待命。等評委算完分數並離開後，與廷萱、品涵火速製作頒獎簡報(PPT)。完成後下樓通知王羿龍與司儀。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time-badge">16:15 之後</div>
+        <div class="item-title">接手頒獎典禮拍攝</div>
+        <div class="item-desc">
+          回到會場接手相機拍攝頒獎畫面。<br>
+          📸 <b>全體教師感謝狀：</b> 全體老師一起拍 1 張。<br>
+          📸 <b>學生頒獎：</b> 每一組得獎團隊拍 1 張。<br>
+          📸 <b>大合照：</b> 最後結尾統一拍攝。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tingxuan" class="tab-content">
+    <div class="content-title">👧 鄭廷萱 專屬行動時間軸</div>
+    <div class="timeline-list">
+      <div class="timeline-item">
+        <div class="time-badge">11:00 之前</div>
+        <div class="item-title">場內拍攝與交接</div>
+        <div class="item-desc">協助會場內拍照。<b>11:00 整，務必將相機交接給慶灣和仲婷。</b></div>
+      </div>
+      <div class="timeline-item important">
+        <div class="time-badge">11:00 - 11:30</div>
+        <div class="item-title">便當領取與重要分類</div>
+        <div class="item-desc">與品涵、艾倫一起領取兩家廠商便當。優先將「評審」與「老師嘉賓」的便當分出交給仲婷與慶灣。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time-badge">11:30 - 11:50</div>
+        <div class="item-title">機動組提早用餐</div>
+        <div class="item-desc">完成分類後去吃飯，11:50 準時回到崗位。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time-badge">11:50 - 13:15</div>
+        <div class="item-title">引導用餐 (F103)</div>
+        <div class="item-desc">負責管理 F103 教室。引導「中山大學」及「靜宜大學」入內用餐。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time-badge">13:15 - 15:22</div>
+        <div class="item-title">暫時協助拍照</div>
+        <div class="item-desc">回到會場協助攝影，特別注意<b>「每一次的大合照都必須拍到」</b>。</div>
+      </div>
+      <div class="timeline-item important">
+        <div class="time-badge">15:22 發表結束</div>
+        <div class="item-title">B302 簡報設計待命</div>
+        <div class="item-desc">立刻前往 B302 的 3 台電腦前待命。等評委算完分數並離開後，與艾倫、品涵火速製作頒獎簡報(PPT)。完成後下樓通知王羿龍與司儀。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time-badge">16:15 之後</div>
+        <div class="item-title">接手頒獎典禮拍攝</div>
+        <div class="item-desc">
+          回到會場接手相機拍攝頒獎畫面。<br>
+          📸 <b>全體教師感謝狀：</b> 全體老師一起拍 1 張。<br>
+          📸 <b>學生頒獎：</b> 每一組得獎團隊拍 1 張。<br>
+          📸 <b>大合照：</b> 最後結尾統一拍攝。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="bento" class="tab-content">
+    <div class="content-title">🍱 各校便當明細與金額核對</div>
+    
+    <div class="tip-box alert">
+      <h4>🚨 VIP 便當優先處理 (11:30前)</h4>
+      <p>評審(B309) 與 老師嘉賓(後方休息室) 的便當，請於 11:30 整理好讓仲婷與慶灣帶走。</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 25%;">單位 (負責人)</th>
+          <th style="width: 50%;">餐點明細與數量</th>
+          <th style="width: 25%;">代收總額</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>淡江大學</b><br><small>📍 F101 (艾倫)</small></td>
+          <td>
+            <ul class="food-list">
+              <li>舒肥雞腿排 (香辣) × 1</li>
+              <li>舒肥雞腿排 (玫瑰鹽) × 8</li>
+              <li>舒肥雞腿排 (義式香草) × 6</li>
+              <li>舒肥雞腿排 (黑胡椒) × 6</li>
+              <li>舒肥松板豬 × 1</li>
+            </ul>
+            <span style="font-weight: 700; color: var(--navy);">總計：22 葷</span>
+          </td>
+          <td class="price-text">NT$ 3,100</td>
+        </tr>
+        <tr>
+          <td><b>中山大學</b><br><small>📍 F103 (廷萱)</small></td>
+          <td>
+            <ul class="food-list">
+              <li>大臺式便當 × 11</li>
+              <li>舒肥嫩雞胸 × 2</li>
+              <li>嫩煎巴沙魚 × 1</li>
+              <li>素食便當 × 1</li>
+            </ul>
+            <span style="font-weight: 700; color: var(--navy);">總計：14 葷 1 素</span>
+          </td>
+          <td class="price-text">NT$ 1,750</td>
+        </tr>
+        <tr class="highlight-row">
+          <td><b>嘉義大學</b><br><small>📍 F101 (艾倫)</small></td>
+          <td>
+            <ul class="food-list">
+              <li>臺式便當 × 4</li>
+              <li>炸排骨飯 × 13</li>
+              <li>炸魚排飯 × 2</li>
+              <li>素食便當 × 1</li>
+            </ul>
+            <span style="font-weight: 700; color: var(--navy);">總計：19 葷 1 素</span>
+          </td>
+          <td class="price-text">NT$ 2,020<br>
+          <small style="color: var(--text-light); font-family: 'Noto Sans TC';">(12:00 由王羿龍收)</small></td>
+        </tr>
+        <tr>
+          <td><b>靜宜大學</b><br><small>📍 F103 (廷萱)</small></td>
+          <td>
+            <ul class="food-list">
+              <li>臺式便當 × 4</li>
+            </ul>
+            <span style="font-weight: 700; color: var(--navy);">總計：4 葷</span>
+          </td>
+          <td class="price-text">NT$ 400</td>
+        </tr>
+        <tr>
+          <td><b>臺南大學</b><br><small>📍 E302, E303 (品涵)</small></td>
+          <td>
+            <ul class="food-list">
+              <li>大臺式便當 × 52</li>
+              <li>素食便當 × 1</li>
+            </ul>
+            <span style="font-weight: 700; color: var(--navy);">總計：52 葷 1 素</span>
+          </td>
+          <td style="color: var(--text-light); font-size: 13px;">(不需代收)</td>
+        </tr>
+        <tr>
+          <td><b>早上活動參與者</b><br><small>📍 F101 (艾倫)</small></td>
+          <td>
+            <ul class="food-list">
+              <li>依現場數量發放</li>
+            </ul>
+          </td>
+          <td style="color: var(--text-light); font-size: 13px;">(不需代收)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+  function switchTab(btn, tabId) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
