@@ -154,8 +154,8 @@
 <div class="footer">出席登記系統 · 如有問題請洽主辦方</div>
 
 <script>
-// ⭐ 這裡記得換成你剛才「重新部署」後的 Google Apps Script 網頁應用程式網址 ⭐
-const API = 'https://script.google.com/macros/s/AKfycbxw6kOmdPe42hQZ2pzJMfKj--0Qx454enrhzOtu-Cfl8VqziHoxKn62BeGRk59ct5_h/exec';
+// 已嵌入你的新 GAS API 網址
+const API = 'https://script.google.com/macros/s/AKfycbyF4xHBklqQ0CQ2SSydj46MpuovmOguXN6ZiGtcLW8gloBEPG2EVXItkdIuYbqqRUjL/exec';
 
 let action='in', role='', school='';
 const SCHOOL_ROLES=['學生','老師/助教','工作人員'];
@@ -174,7 +174,6 @@ function setRole(el, r){
   el.classList.add('selected');
   role=r;
   document.getElementById('err-role').style.display='none';
-  // show/hide school
   const sec=document.getElementById('school-section');
   if(SCHOOL_ROLES.includes(r)){
     sec.style.display='block';
@@ -210,12 +209,9 @@ async function doSubmit(){
   btn.classList.add('loading');
   
   try {
-    // ⭐ 更新為正確的 fetch 方法，避免被 CORS 預檢請求卡住 ⭐
     await fetch(API, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'text/plain;charset=utf-8'
-      },
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({
         name: name,
         school: school || '—',
@@ -223,15 +219,12 @@ async function doSubmit(){
         action: action === 'in' ? '簽到' : '簽退'
       })
     });
-    
-    // 如果 fetch 成功執行，顯示成功畫面
     showSuccess(name);
-    
   } catch(e) {
     btn.disabled=false;
     btn.classList.remove('loading');
     const el = document.getElementById('err-name');
-    el.textContent = '網路錯誤，請重試 (並確認 Apps Script 權限為所有人)';
+    el.textContent = '網路錯誤，請重試';
     el.style.display = 'block';
   }
 }
@@ -265,6 +258,7 @@ function resetForm(){
   ['err-role','err-school','err-name'].forEach(id=>document.getElementById(id).style.display='none');
   const btn=document.getElementById('submit-btn');btn.disabled=false;btn.classList.remove('loading');
   document.getElementById('form-screen').style.display='block';
+  document.getElementById('success-screen').style.none';
   document.getElementById('success-screen').style.display='none';
 }
 </script>
