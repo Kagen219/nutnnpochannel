@@ -47,7 +47,7 @@
   .role-btn.selected{border-color:var(--orange);background:rgba(255,107,0,0.07);box-shadow:0 0 0 3px rgba(255,107,0,0.1);}
   .role-btn.selected .rb-label{color:var(--orange);}
 
-  /* 學校選擇（初始隱藏，只有學生/助教/老師身分才顯示） */
+  /* 學校選擇 */
   .school-section{display:none;}
   .school-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px;}
   .school-btn{padding:11px 8px;border-radius:12px;border:2px solid var(--border);background:var(--bg);cursor:pointer;text-align:center;transition:all 0.17s;font-family:'Noto Sans TC',sans-serif;}
@@ -102,14 +102,12 @@
     <h1>出席登記</h1>
     <p class="sub">請完整填寫以下資訊</p>
 
-    <!-- 簽到/簽退 -->
     <div class="sec-label"><span class="req">●</span> 動作</div>
     <div class="two-grid">
       <div class="opt-btn sel-in" id="act-in" onclick="setAction('in')"><span class="ob-icon">🟢</span><span class="ob-label">簽到</span></div>
       <div class="opt-btn" id="act-out" onclick="setAction('out')"><span class="ob-icon">🔵</span><span class="ob-label">簽退</span></div>
     </div>
 
-    <!-- 身分 -->
     <div class="sec-label"><span class="req">●</span> 身分</div>
     <div class="role-grid" id="role-grid">
       <div class="role-btn" onclick="setRole(this,'學生')"><span class="rb-icon">🎓</span><span class="rb-label">學生</span></div>
@@ -121,7 +119,6 @@
     </div>
     <div class="err" id="err-role">請選擇身分</div>
 
-    <!-- 學校（學生/老師/助教才顯示）-->
     <div class="school-section" id="school-section">
       <div class="sec-label"><span class="req">●</span> 學校</div>
       <div class="school-grid" id="school-grid">
@@ -134,7 +131,6 @@
       <div class="err" id="err-school">請選擇學校</div>
     </div>
 
-    <!-- 姓名 -->
     <div class="sec-label"><span class="req">●</span> 姓名</div>
     <input type="text" id="name-input" placeholder="例：王小明" autocomplete="name" autocorrect="off" maxlength="20">
     <div class="err" id="err-name">請輸入姓名</div>
@@ -158,7 +154,9 @@
 <div class="footer">出席登記系統 · 如有問題請洽主辦方</div>
 
 <script>
-const API='https://script.google.com/macros/s/AKfycbxw6kOmdPe42hQZ2pzJMfKj--0Qx454enrhzOtu-Cfl8VqziHoxKn62BeGRk59ct5_h/exec';
+// ⭐ 這裡記得換成你剛才「重新部署」後的 Google Apps Script 網頁應用程式網址 ⭐
+const API = 'https://script.google.com/macros/s/AKfycbxw6kOmdPe42hQZ2pzJMfKj--0Qx454enrhzOtu-Cfl8VqziHoxKn62BeGRk59ct5_h/exec';
+
 let action='in', role='', school='';
 const SCHOOL_ROLES=['學生','老師/助教','工作人員'];
 
@@ -208,18 +206,33 @@ async function doSubmit(){
   if(err)return;
 
   const btn=document.getElementById('submit-btn');
-  btn.disabled=true;btn.classList.add('loading');
-  try{
+  btn.disabled=true;
+  btn.classList.add('loading');
+  
+  try {
+    // ⭐ 更新為正確的 fetch 方法，避免被 CORS 預檢請求卡住 ⭐
+    await fetch(API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify({
+        name: name,
+        school: school || '—',
+        role: role,
+        action: action === 'in' ? '簽到' : '簽退'
+      })
+    });
     
-await fetch(API, {
-  method: 'POST',
-  // 移除 mode: 'no-cors'，並改用 text/plain 避免觸發 GAS 不支援的 CORS 預檢請求 (OPTIONS)
-  headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
-  body: JSON.stringify({ name, school: school || '—', role, action: action === 'in' ? '簽到' : '簽退' })
-});
-  }catch(e){
-    btn.disabled=false;btn.classList.remove('loading');
-    const el=document.getElementById('err-name');el.textContent='網路錯誤，請重試';el.style.display='block';
+    // 如果 fetch 成功執行，顯示成功畫面
+    showSuccess(name);
+    
+  } catch(e) {
+    btn.disabled=false;
+    btn.classList.remove('loading');
+    const el = document.getElementById('err-name');
+    el.textContent = '網路錯誤，請重試 (並確認 Apps Script 權限為所有人)';
+    el.style.display = 'block';
   }
 }
 
