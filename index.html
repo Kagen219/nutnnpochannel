@@ -210,9 +210,13 @@ async function doSubmit(){
   const btn=document.getElementById('submit-btn');
   btn.disabled=true;btn.classList.add('loading');
   try{
-    await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({name,school:school||'—',role,action:action==='in'?'簽到':'簽退'})});
-    showSuccess(name);
+    
+await fetch(API, {
+  method: 'POST',
+  // 移除 mode: 'no-cors'，並改用 text/plain 避免觸發 GAS 不支援的 CORS 預檢請求 (OPTIONS)
+  headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+  body: JSON.stringify({ name, school: school || '—', role, action: action === 'in' ? '簽到' : '簽退' })
+});
   }catch(e){
     btn.disabled=false;btn.classList.remove('loading');
     const el=document.getElementById('err-name');el.textContent='網路錯誤，請重試';el.style.display='block';
