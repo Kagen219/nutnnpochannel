@@ -2,265 +2,419 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>出席登記</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>後台管理</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
   :root {
-    --orange:#FF6B00; --orange-l:#FF8C35;
-    --bg:#FFF8F3; --surface:#FFFFFF;
-    --text:#1A1208; --muted:#9E7B5A; --border:#F0DECE;
-    --green:#2ECC71; --blue:#3B82F6; --blue-l:#60A5FA;
+    --orange:#FF6B00; --orange-l:#FF8C35; --glow:rgba(255,107,0,0.15);
+    --bg:#0F0A05; --s1:#1A1008; --s2:#251808; --bd:#3D2510;
+    --text:#FAF0E6; --muted:#8A6040;
+    --green:#00D97A; --red:#FF4455; --yellow:#FFD32A; --blue:#60A5FA; --purple:#A78BFA;
   }
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-  body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;overflow-x:hidden;}
-  body::before{content:'';position:fixed;top:-100px;right:-100px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,0,0.1),transparent 70%);pointer-events:none;}
-  body::after{content:'';position:fixed;bottom:-80px;left:-80px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,140,53,0.07),transparent 70%);pointer-events:none;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,107,0,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,107,0,0.022) 1px,transparent 1px);background-size:36px 36px;pointer-events:none;z-index:0;}
+  .wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:22px 16px;}
 
-  .card{background:var(--surface);border-radius:26px;padding:32px 26px;width:100%;max-width:420px;box-shadow:0 4px 6px rgba(255,107,0,0.05),0 20px 60px rgba(180,80,0,0.1);position:relative;z-index:1;animation:cardIn 0.5s cubic-bezier(0.34,1.4,0.64,1) both;}
-  @keyframes cardIn{from{opacity:0;transform:translateY(28px) scale(0.96)}to{opacity:1;transform:none}}
-  .card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:4px;background:linear-gradient(90deg,var(--orange),var(--orange-l));border-radius:0 0 4px 4px;}
+  /* Header */
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--bd);flex-wrap:wrap;gap:12px;}
+  .logo{display:flex;align-items:center;gap:11px;}
+  .logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--orange),var(--orange-l));border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 0 18px var(--glow);}
+  h1{font-size:18px;font-weight:800;}
+  .sub{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:1px;}
+  .hdr-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .live{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;display:flex;align-items:center;gap:5px;}
+  .dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
 
-  .logo-wrap{display:flex;justify-content:center;margin-bottom:18px;}
-  .logo-badge{width:62px;height:62px;background:linear-gradient(135deg,var(--orange),var(--orange-l));border-radius:17px;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 8px 24px rgba(255,107,0,0.32);animation:pulse 3s ease-in-out infinite;}
-  @keyframes pulse{0%,100%{box-shadow:0 8px 24px rgba(255,107,0,0.32)}50%{box-shadow:0 8px 34px rgba(255,107,0,0.52)}}
-  h1{font-size:22px;font-weight:900;color:var(--text);text-align:center;letter-spacing:-0.02em;margin-bottom:4px;}
-  .sub{font-size:12px;color:var(--muted);text-align:center;margin-bottom:24px;}
-
-  .sec-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
-  .req{color:var(--orange);font-size:14px;}
-
-  .two-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px;}
-  .opt-btn{padding:13px 8px;border-radius:13px;border:2px solid var(--border);background:var(--bg);cursor:pointer;text-align:center;transition:all 0.17s;font-family:'Noto Sans TC',sans-serif;}
-  .opt-btn .ob-icon{font-size:20px;display:block;margin-bottom:3px;}
-  .opt-btn .ob-label{font-size:14px;font-weight:700;color:var(--muted);}
-  .opt-btn.sel-in{border-color:var(--orange);background:rgba(255,107,0,0.06);box-shadow:0 0 0 3px rgba(255,107,0,0.1);}
-  .opt-btn.sel-in .ob-label{color:var(--orange);}
-  .opt-btn.sel-out{border-color:var(--blue);background:rgba(59,130,246,0.06);box-shadow:0 0 0 3px rgba(59,130,246,0.1);}
-  .opt-btn.sel-out .ob-label{color:var(--blue);}
-
-  /* 身分選擇 */
-  .role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px;}
-  .role-btn{padding:10px 6px;border-radius:12px;border:2px solid var(--border);background:var(--bg);cursor:pointer;text-align:center;transition:all 0.17s;font-family:'Noto Sans TC',sans-serif;}
-  .role-btn .rb-icon{font-size:16px;display:block;margin-bottom:3px;}
-  .role-btn .rb-label{font-size:11px;font-weight:700;color:var(--muted);}
-  .role-btn.selected{border-color:var(--orange);background:rgba(255,107,0,0.07);box-shadow:0 0 0 3px rgba(255,107,0,0.1);}
-  .role-btn.selected .rb-label{color:var(--orange);}
-
-  /* 學校選擇 */
-  .school-section{display:none;}
-  .school-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px;}
-  .school-btn{padding:11px 8px;border-radius:12px;border:2px solid var(--border);background:var(--bg);cursor:pointer;text-align:center;transition:all 0.17s;font-family:'Noto Sans TC',sans-serif;}
-  .school-btn .sb-icon{font-size:18px;display:block;margin-bottom:3px;}
-  .school-btn .sb-name{font-size:11px;font-weight:700;color:var(--muted);line-height:1.4;}
-  .school-btn.selected{border-color:var(--orange);background:rgba(255,107,0,0.07);box-shadow:0 0 0 3px rgba(255,107,0,0.1);}
-  .school-btn.selected .sb-name{color:var(--orange);}
-  .school-btn.span2{grid-column:span 2;}
-
-  input[type="text"]{width:100%;padding:14px 16px;font-size:16px;font-family:'Noto Sans TC',sans-serif;font-weight:500;color:var(--text);background:var(--bg);border:2px solid var(--border);border-radius:13px;outline:none;transition:all 0.2s;margin-bottom:6px;}
-  input[type="text"]:focus{border-color:var(--orange);background:#fff;box-shadow:0 0 0 4px rgba(255,107,0,0.09);}
-  input[type="text"].blue-focus:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(59,130,246,0.09);}
-  input[type="text"]::placeholder{color:#C9A98A;font-weight:400;}
-
-  .err{font-size:11px;color:#E74C3C;margin-bottom:10px;display:none;padding-left:2px;}
-
-  .btn-submit{width:100%;padding:16px;font-size:15px;font-weight:700;font-family:'Noto Sans TC',sans-serif;color:#fff;border:none;border-radius:13px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;margin-top:6px;}
-  .mode-in{background:linear-gradient(135deg,var(--orange),var(--orange-l));box-shadow:0 6px 18px rgba(255,107,0,0.36);}
-  .mode-out{background:linear-gradient(135deg,var(--blue),var(--blue-l));box-shadow:0 6px 18px rgba(59,130,246,0.36);}
-  .btn-submit:hover{transform:translateY(-2px);}
-  .btn-submit:active{transform:none;}
-  .btn-submit:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
-  .btn-submit.loading .btn-text{opacity:0;}
-  .spinner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;}
-  .btn-submit.loading .spinner{opacity:1;}
-  .ring{width:20px;height:20px;border:3px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;}
+  .btn{padding:8px 16px;border:none;border-radius:8px;font-family:'Noto Sans TC',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+  .btn-ghost{background:none;border:1px solid var(--bd);color:var(--muted);}
+  .btn-ghost:hover{border-color:var(--orange);color:var(--orange);}
+  .btn-ghost.spin svg{animation:spin 0.8s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg)}}
+  .btn-export{background:linear-gradient(135deg,var(--orange),var(--orange-l));color:#fff;box-shadow:0 4px 12px var(--glow);}
+  .btn-export:hover{transform:translateY(-1px);}
 
-  .shake{animation:shake 0.38s ease;}
-  @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+  /* Stats */
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px;}
+  .stat{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:14px;text-align:center;transition:border-color 0.2s;}
+  .stat:hover{border-color:var(--orange);}
+  .stat-n{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;line-height:1;margin-bottom:4px;}
+  .stat-l{font-size:10px;color:var(--muted);}
 
-  .success-screen{display:none;text-align:center;animation:pop 0.45s cubic-bezier(0.34,1.4,0.64,1) both;}
-  @keyframes pop{from{opacity:0;transform:scale(0.82)}to{opacity:1;transform:scale(1)}}
-  .suc-icon{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 16px;}
-  .suc-icon.in{background:linear-gradient(135deg,var(--orange),var(--orange-l));box-shadow:0 8px 26px rgba(255,107,0,0.38);}
-  .suc-icon.out{background:linear-gradient(135deg,var(--blue),var(--blue-l));box-shadow:0 8px 26px rgba(59,130,246,0.38);}
-  .suc-title{font-size:24px;font-weight:900;color:var(--text);margin-bottom:5px;}
-  .suc-name{font-size:18px;font-weight:700;margin-bottom:3px;}
-  .suc-name.in{color:var(--orange);}.suc-name.out{color:var(--blue);}
-  .suc-meta{font-size:12px;color:var(--muted);margin-bottom:8px;}
-  .suc-time{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-top:14px;padding:7px 16px;background:var(--bg);border-radius:30px;display:inline-block;}
-  .btn-back{margin-top:16px;padding:10px 24px;border:2px solid var(--border);background:none;border-radius:11px;font-family:'Noto Sans TC',sans-serif;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.2s;}
-  .btn-back:hover{border-color:var(--orange);color:var(--orange);}
+  /* School tabs */
+  .school-tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;}
+  .tab{padding:7px 16px;border-radius:20px;border:1px solid var(--bd);background:none;color:var(--muted);font-family:'Noto Sans TC',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.18s;}
+  .tab:hover{border-color:var(--orange);color:var(--orange);}
+  .tab.active{background:linear-gradient(135deg,var(--orange),var(--orange-l));border-color:transparent;color:#fff;box-shadow:0 3px 10px var(--glow);}
+  .tab .cnt{display:inline-block;background:rgba(255,255,255,0.2);border-radius:10px;padding:1px 7px;font-size:10px;margin-left:4px;}
+  .tab:not(.active) .cnt{background:var(--s2);color:var(--muted);}
 
-  .footer{margin-top:20px;font-size:10px;color:#C9A98A;text-align:center;font-family:'DM Mono',monospace;position:relative;z-index:1;}
+  /* Groups */
+  .groups-wrap{display:flex;flex-direction:column;gap:14px;}
+  .group-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;overflow:hidden;}
+  .group-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:var(--s2);border-bottom:1px solid var(--bd);}
+  .group-name{font-size:13px;font-weight:700;color:var(--text);}
+  .group-stats{display:flex;gap:10px;font-size:11px;font-family:'DM Mono',monospace;}
+  .gs-in{color:var(--green);}
+  .gs-out{color:var(--blue);}
+  .gs-absent{color:var(--red);}
+
+  /* Person rows */
+  .person-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--bd);}
+  .person{background:var(--s1);padding:11px 16px;display:flex;flex-direction:column;gap:3px;transition:background 0.15s;}
+  .person:hover{background:var(--s2);}
+  .p-name{font-size:13px;font-weight:600;}
+  .p-status{font-size:11px;display:flex;align-items:center;gap:5px;}
+  .p-time{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+  .badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;}
+  .b-in{background:rgba(0,217,122,0.12);color:var(--green);border:1px solid rgba(0,217,122,0.25);}
+  .b-out{background:rgba(96,165,250,0.12);color:var(--blue);border:1px solid rgba(96,165,250,0.25);}
+  .b-absent{background:rgba(255,68,85,0.1);color:var(--red);border:1px solid rgba(255,68,85,0.2);}
+
+  .loading-bar{height:3px;background:var(--bd);border-radius:3px;margin-bottom:16px;overflow:hidden;display:none;}
+  .loading-bar.on{display:block;}
+  .loading-bar::after{content:'';display:block;height:100%;width:40%;background:linear-gradient(90deg,var(--orange),var(--orange-l));animation:lb 1s ease-in-out infinite alternate;border-radius:3px;}
+  @keyframes lb{from{transform:translateX(-100%)}to{transform:translateX(300%)} }
+
+  @media(max-width:600px){
+    .stats{grid-template-columns:repeat(3,1fr);}
+    .stat-n{font-size:22px;}
+    .person-list{grid-template-columns:1fr 1fr;}
+  }
 </style>
 </head>
 <body>
-<div class="card">
-  <div id="form-screen">
-    <div class="logo-wrap"><div class="logo-badge">✍️</div></div>
-    <h1>出席登記</h1>
-    <p class="sub">請完整填寫以下資訊</p>
+<div class="wrap">
 
-    <div class="sec-label"><span class="req">●</span> 動作</div>
-    <div class="two-grid">
-      <div class="opt-btn sel-in" id="act-in" onclick="setAction('in')"><span class="ob-icon">🟢</span><span class="ob-label">簽到</span></div>
-      <div class="opt-btn" id="act-out" onclick="setAction('out')"><span class="ob-icon">🔵</span><span class="ob-label">簽退</span></div>
+  <header>
+    <div class="logo">
+      <div class="logo-icon">📊</div>
+      <div><h1>後台管理</h1><div class="sub"><span class="dot" style="display:inline-block;margin-right:4px;"></span>ADMIN DASHBOARD</div></div>
     </div>
-
-    <div class="sec-label"><span class="req">●</span> 身分</div>
-    <div class="role-grid" id="role-grid">
-      <div class="role-btn" onclick="setRole(this,'學生')"><span class="rb-icon">🎓</span><span class="rb-label">學生</span></div>
-      <div class="role-btn" onclick="setRole(this,'老師/助教')"><span class="rb-icon">👨‍🏫</span><span class="rb-label">老師/助教</span></div>
-      <div class="role-btn" onclick="setRole(this,'工作人員')"><span class="rb-icon">🧑‍💼</span><span class="rb-label">工作人員</span></div>
-      <div class="role-btn" onclick="setRole(this,'評審')"><span class="rb-icon">⭐</span><span class="rb-label">評審</span></div>
-      <div class="role-btn" onclick="setRole(this,'來賓')"><span class="rb-icon">🙋</span><span class="rb-label">來賓</span></div>
-      <div class="role-btn" onclick="setRole(this,'場域夥伴')"><span class="rb-icon">🤝</span><span class="rb-label">場域夥伴</span></div>
+    <div class="hdr-r">
+      <div class="live" id="last-upd">尚未載入</div>
+      <button class="btn btn-ghost" id="ref-btn" onclick="loadData()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+        重新整理
+      </button>
+      <button class="btn btn-export" onclick="exportXlsx()">📤 匯出報表</button>
     </div>
-    <div class="err" id="err-role">請選擇身分</div>
+  </header>
 
-    <div class="school-section" id="school-section">
-      <div class="sec-label"><span class="req">●</span> 學校</div>
-      <div class="school-grid" id="school-grid">
-        <div class="school-btn" onclick="selectSchool(this,'中山大學')"><span class="sb-icon">🏫</span><span class="sb-name">中山大學</span></div>
-        <div class="school-btn" onclick="selectSchool(this,'臺南大學')"><span class="sb-icon">🏫</span><span class="sb-name">臺南大學</span></div>
-        <div class="school-btn" onclick="selectSchool(this,'嘉義大學')"><span class="sb-icon">🏫</span><span class="sb-name">嘉義大學</span></div>
-        <div class="school-btn" onclick="selectSchool(this,'靜宜大學')"><span class="sb-icon">🏫</span><span class="sb-name">靜宜大學</span></div>
-        <div class="school-btn span2" onclick="selectSchool(this,'淡江大學')"><span class="sb-icon">🏫</span><span class="sb-name">淡江大學</span></div>
-      </div>
-      <div class="err" id="err-school">請選擇學校</div>
-    </div>
+  <div class="loading-bar" id="lb"></div>
 
-    <div class="sec-label"><span class="req">●</span> 姓名</div>
-    <input type="text" id="name-input" placeholder="例：王小明" autocomplete="name" autocorrect="off" maxlength="20">
-    <div class="err" id="err-name">請輸入姓名</div>
-
-    <button class="btn-submit mode-in" id="submit-btn" onclick="doSubmit()">
-      <span class="btn-text" id="btn-text">確認簽到 →</span>
-      <span class="spinner"><span class="ring"></span></span>
-    </button>
+  <div class="stats">
+    <div class="stat"><div class="stat-n" style="color:var(--orange)" id="s-total">93</div><div class="stat-l">總人數</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--green)" id="s-in">0</div><div class="stat-l">已簽到</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--blue)" id="s-out">0</div><div class="stat-l">已簽退</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--red)" id="s-abs">93</div><div class="stat-l">未到</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--yellow)" id="s-rate">0%</div><div class="stat-l">出席率</div></div>
   </div>
 
-  <div class="success-screen" id="success-screen">
-    <div class="suc-icon" id="suc-icon"></div>
-    <div class="suc-title" id="suc-title"></div>
-    <div class="suc-name" id="suc-name"></div>
-    <div class="suc-meta" id="suc-meta"></div>
-    <div class="suc-time" id="suc-time"></div>
-    <br>
-    <button class="btn-back" onclick="resetForm()">← 返回再次登記</button>
-  </div>
+  <div class="school-tabs" id="school-tabs"></div>
+
+  <div id="content"></div>
 </div>
-<div class="footer">出席登記系統 · 如有問題請洽主辦方</div>
 
 <script>
 // 已嵌入你的新 GAS API 網址
 const API = 'https://script.google.com/macros/s/AKfycbyF4xHBklqQ0CQ2SSydj46MpuovmOguXN6ZiGtcLW8gloBEPG2EVXItkdIuYbqqRUjL/exec';
 
-let action='in', role='', school='';
-const SCHOOL_ROLES=['學生','老師/助教','工作人員'];
+// ── 完整名單 ──
+const ROSTER = [
+  // 評審
+  {school:'評審', group:'社會網絡股份有限公司創辦人', name:'張幼霖'},
+  {school:'評審', group:'天下CSR頻道總編輯', name:'黃昭勇'},
+  {school:'評審', group:'雲林科技大學企業管理系教授', name:'李慶芳'},
+  {school:'評審', group:'家樂福永續長暨家樂福文教基金會執行長', name:'蘇筱駗'},
+  {school:'評審', group:'成功大學企業管理系教授', name:'周信輝'},
 
-function setAction(a){
-  action=a;
-  document.getElementById('act-in').className='opt-btn'+(a==='in'?' sel-in':'');
-  document.getElementById('act-out').className='opt-btn'+(a==='out'?' sel-out':'');
-  document.getElementById('submit-btn').className='btn-submit '+(a==='in'?'mode-in':'mode-out');
-  document.getElementById('btn-text').textContent=a==='in'?'確認簽到 →':'確認簽退 →';
-  document.getElementById('name-input').className=a==='out'?'blue-focus':'';
+  // 來賓
+  {school:'來賓', group:'-', name:'黃韻澄'},
+  {school:'來賓', group:'國立高雄科技大學/教務處教學發展中心', name:'魏碧君'},
+  {school:'來賓', group:'國立高雄科技大學', name:'林詩涵'},
+  {school:'來賓', group:'國立高雄科技大學', name:'廖翊婷'},
+  {school:'來賓', group:'永續品牌-善良Kindmade', name:'侯柏安'},
+  {school:'來賓', group:'合進製麵', name:'楊欽龍'},
+  {school:'來賓', group:'社會福祉及社會企業公益信託循環基金（SERT基金）', name:'邱恩妮'},
+
+  // 臺南大學
+  {school:'臺南大學', group:'經營與管理學系教授兼系主任', name:'蕭詠璋'},
+  {school:'臺南大學', group:'助教', name:'王羿龍'},
+  {school:'臺南大學', group:'助教', name:'黃冠懷'},
+  {school:'臺南大學', group:'工作人員', name:'鄭仲婷'},
+  {school:'臺南大學', group:'工作人員', name:'吳振宇'},
+  {school:'臺南大學', group:'工作人員', name:'古月縈'},
+  {school:'臺南大學', group:'工作人員', name:'柯慶灣'},
+  {school:'臺南大學', group:'工作人員', name:'陶品涵'},
+  {school:'臺南大學', group:'工作人員', name:'鄭廷萱'},
+  {school:'臺南大學', group:'工作人員', name:'江艾倫'},
+  {school:'臺南大學', group:'微光種子', name:'郭佳靈'},
+  {school:'臺南大學', group:'微光種子', name:'紀宗瀚'},
+  {school:'臺南大學', group:'微光種子', name:'柯丞芫'},
+  {school:'臺南大學', group:'微光種子', name:'張嘉真'},
+  {school:'臺南大學', group:'微光種子', name:'林子喬'},
+  {school:'臺南大學', group:'食在有愛', name:'郭芷涵'},
+  {school:'臺南大學', group:'食在有愛', name:'徐鈺翔'},
+  {school:'臺南大學', group:'食在有愛', name:'許桂娟'},
+  {school:'臺南大學', group:'食在有愛', name:'黃美玲'},
+  {school:'臺南大學', group:'食在有愛', name:'許雅惠'},
+  {school:'臺南大學', group:'小事大愛', name:'盧威志'},
+  {school:'臺南大學', group:'小事大愛', name:'林宇桓'},
+  {school:'臺南大學', group:'小事大愛', name:'陳雅芳'},
+  {school:'臺南大學', group:'小事大愛', name:'蕭順壕'},
+  {school:'臺南大學', group:'小事大愛', name:'黃佩云'},
+  {school:'臺南大學', group:'集食救援', name:'林瑞玲'},
+  {school:'臺南大學', group:'集食救援', name:'林妤安'},
+  {school:'臺南大學', group:'集食救援', name:'范耕綸'},
+  {school:'臺南大學', group:'集食救援', name:'黃詩晴'},
+  {school:'臺南大學', group:'集食救援', name:'戴詩芸'},
+  {school:'臺南大學', group:'集食救援', name:'江姿慧'},
+  {school:'臺南大學', group:'用愛翻轉未來', name:'林洛霓'},
+  {school:'臺南大學', group:'用愛翻轉未來', name:'鄭乃嘉'},
+  {school:'臺南大學', group:'用愛翻轉未來', name:'李閣翰'},
+  {school:'臺南大學', group:'用愛翻轉未來', name:'陳玟賢'},
+  {school:'臺南大學', group:'用愛翻轉未來', name:'侯庭蓁'},
+  {school:'臺南大學', group:'用愛翻轉未來', name:'蔡淑真'},
+  {school:'臺南大學', group:'用愛翻轉未來', name:'賴譁磷'},
+  {school:'臺南大學', group:'用愛翻轉未來', name:'陳文斌'},
+  {school:'臺南大學', group:'用愛翻轉未來', name:'黃冠懷'},
+  {school:'臺南大學', group:'用愛翻轉未來', name:'劉皓琳'},
+  {school:'臺南大學', group:'用愛翻轉未來', name:'王均緯'},
+
+  // 中山大學
+  {school:'中山大學', group:'社會創新研究所助理教授', name:'楊士奇'},
+  {school:'中山大學', group:'助教', name:'梁麗蕙'},
+  {school:'中山大學', group:'資產支配者', name:'吳紹宇'},
+  {school:'中山大學', group:'資產支配者', name:'陳以仁'},
+  {school:'中山大學', group:'資產支配者', name:'黃冠綸'},
+  {school:'中山大學', group:'第二組', name:'呂奕丞'},
+  {school:'中山大學', group:'第二組', name:'蔡昀晉'},
+  {school:'中山大學', group:'第二組', name:'陳奇詠'},
+  {school:'中山大學', group:'海底總動員', name:'何芷芊'},
+  {school:'中山大學', group:'海底總動員', name:'蕭詩怡'},
+  {school:'中山大學', group:'海底總動員', name:'陳亮云'},
+  {school:'中山大學', group:'共創發聲所', name:'黃炫哲'},
+  {school:'中山大學', group:'共創發聲所', name:'馮立彤'},
+  {school:'中山大學', group:'共創發聲所', name:'楊采蓁'},
+  {school:'中山大學', group:'負負得正', name:'吳 凡'},
+  {school:'中山大學', group:'負負得正', name:'林祉伶'},
+  {school:'中山大學', group:'負負得正', name:'韋良璟'},
+
+  // 靜宜大學
+  {school:'靜宜大學', group:'資訊管理學系助理教授', name:'康贊清'},
+  {school:'靜宜大學', group:'助教', name:'許閔慈'},
+  {school:'靜宜大學', group:'母愛送糕厝', name:'黃義祥'},
+  {school:'靜宜大學', group:'母愛送糕厝', name:'黃士豪'},
+  {school:'靜宜大學', group:'母愛送糕厝', name:'施富傑'},
+  {school:'靜宜大學', group:'母愛送糕厝', name:'王奕翔'},
+  {school:'靜宜大學', group:'母愛送糕厝', name:'吳泓毅'},
+  {school:'靜宜大學', group:'糕興遇見你', name:'鐘元汝'},
+  {school:'靜宜大學', group:'糕興遇見你', name:'張伊傑'},
+  {school:'靜宜大學', group:'糕興遇見你', name:'許旆慈'},
+  {school:'靜宜大學', group:'糕興遇見你', name:'羅婉薰'},
+
+  // 嘉義大學
+  {school:'嘉義大學', group:'數位學習設計與管理學系教授', name:'朱彩馨'},
+  {school:'嘉義大學', group:'助教', name:'石宜婷'},
+  {school:'嘉義大學', group:'助教', name:'劉澤菁'},
+  {school:'嘉義大學', group:'行動支Food', name:'陳宜鎂'},
+  {school:'嘉義大學', group:'行動支Food', name:'王寬羽'},
+  {school:'嘉義大學', group:'行動支Food', name:'秦苡禎'},
+  {school:'嘉義大學', group:'行動支Food', name:'王聖智'},
+  {school:'嘉義大學', group:'行動支Food', name:'賴品豪'},
+  {school:'嘉義大學', group:'行動支Food', name:'卓姿琳'},
+  {school:'嘉義大學', group:'豆米愛心實驗室', name:'劉德瑄'},
+  {school:'嘉義大學', group:'豆米愛心實驗室', name:'陳品瑜'},
+  {school:'嘉義大學', group:'豆米愛心實驗室', name:'賴禹禎'},
+  {school:'嘉義大學', group:'豆米愛心實驗室', name:'蔡欣霓'},
+  {school:'嘉義大學', group:'豆米愛心實驗室', name:'徐霈淳'},
+  {school:'嘉義大學', group:'餐餐童樂 HealMeal', name:'潘姵彣'},
+  {school:'嘉義大學', group:'餐餐童樂 HealMeal', name:'蔣嘉芸'},
+  {school:'嘉義大學', group:'餐餐童樂 HealMeal', name:'吳翊謦'},
+  {school:'嘉義大學', group:'餐餐童樂 HealMeal', name:'林芳宇'},
+  {school:'嘉義大學', group:'餐餐童樂 HealMeal', name:'吳冰雁'},
+  {school:'嘉義大學', group:'餐餐童樂 HealMeal', name:'黃偉航'},
+  {school:'嘉義大學', group:'集食。點光行動', name:'葉怡嫻'},
+  {school:'嘉義大學', group:'集食。點光行動', name:'朱書靚'},
+  {school:'嘉義大學', group:'集食。點光行動', name:'劉芷瑩'},
+  {school:'嘉義大學', group:'i不釋手', name:'葉仲恩'},
+  {school:'嘉義大學', group:'i不釋手', name:'林柏亨'},
+  {school:'嘉義大學', group:'i不釋手', name:'郭江瑋'},
+  {school:'嘉義大學', group:'i不釋手', name:'蔡凱仲'},
+  {school:'嘉義大學', group:'i不釋手', name:'邱翌帆'},
+  {school:'嘉義大學', group:'湯心比心｜NGO集食計畫', name:'徐紫屏'},
+  {school:'嘉義大學', group:'湯心比心｜NGO集食計畫', name:'胡芷瑜'},
+  {school:'嘉義大學', group:'湯心比心｜NGO集食計畫', name:'曾心宜'},
+  {school:'嘉義大學', group:'湯心比心｜NGO集食計畫', name:'陳逸軒'},
+  {school:'嘉義大學', group:'湯心比心｜NGO集食計畫', name:'連祥均'},
+
+  // 淡江大學
+  {school:'淡江大學', group:'企管系教授', name:'涂敏芬'},
+  {school:'淡江大學', group:'建築系教授', name:'黃瑞茂'},
+  {school:'淡江大學', group:'教設系助理教授', name:'邱俊達'},
+  {school:'淡江大學', group:'教科系助理教授', name:'林逸農'},
+  {school:'淡江大學', group:'助教', name:'陳冠廷'},
+  {school:'淡江大學', group:'工作人員', name:'陳姵陵'},
+  {school:'淡江大學', group:'工作人員', name:'林雅雯'},
+  {school:'淡江大學', group:'工作人員', name:'曾盈雨'},
+  {school:'淡江大學', group:'工作人員', name:'温蓮忻'},
+  {school:'淡江大學', group:'場域夥伴', name:'李麗卿'},
+  {school:'淡江大學', group:'場域夥伴', name:'許程閔'},
+  {school:'淡江大學', group:'「食」現夢想家', name:'鄭雅文'},
+  {school:'淡江大學', group:'「食」現夢想家', name:'利蓁琳'},
+  {school:'淡江大學', group:'「食\"現夢想家', name:'李佳芮'},
+  {school:'淡江大學', group:'滬食行動', name:'洪意涵'},
+  {school:'淡江大學', group:'滬食行動', name:'彭祺堯'},
+  {school:'淡江大學', group:'滬食行動', name:'鍾瑋臻'}
+];
+
+const SCHOOLS = ['全部', '評審', '來賓', '中山大學', '靜宜大學', '臺南大學', '嘉義大學', '淡江大學'];
+let records = []; 
+let activeSchool = '全部';
+
+function buildTabs() {
+  const el = document.getElementById('school-tabs');
+  el.innerHTML = SCHOOLS.map(s => {
+    const count = s === '全部' ? ROSTER.length : ROSTER.filter(r => r.school === s).length;
+    return `<button class="tab ${s === activeSchool ? 'active' : ''}" onclick="setSchool('${s}')">${s}<span class="cnt">${count}</span></button>`;
+  }).join('');
 }
 
-function setRole(el, r){
-  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('selected'));
-  el.classList.add('selected');
-  role=r;
-  document.getElementById('err-role').style.display='none';
-  const sec=document.getElementById('school-section');
-  if(SCHOOL_ROLES.includes(r)){
-    sec.style.display='block';
-  } else {
-    sec.style.display='none';
-    school='';
-    document.querySelectorAll('.school-btn').forEach(b=>b.classList.remove('selected'));
-  }
-}
+function setSchool(s) { activeSchool = s; buildTabs(); render(); }
 
-function selectSchool(el,name){
-  document.querySelectorAll('.school-btn').forEach(b=>b.classList.remove('selected'));
-  el.classList.add('selected');
-  school=name;
-  document.getElementById('err-school').style.display='none';
-}
-
-function shake(id){const el=document.getElementById(id);el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');setTimeout(()=>el.classList.remove('shake'),400);}
-
-document.getElementById('name-input').addEventListener('keydown',e=>{if(e.key==='Enter')doSubmit();});
-document.getElementById('name-input').addEventListener('input',()=>{document.getElementById('err-name').style.display='none';});
-
-async function doSubmit(){
-  let err=false;
-  if(!role){document.getElementById('err-role').style.display='block';shake('role-grid');err=true;}
-  if(SCHOOL_ROLES.includes(role)&&!school){document.getElementById('err-school').style.display='block';shake('school-grid');err=true;}
-  const name=document.getElementById('name-input').value.trim();
-  if(!name){document.getElementById('err-name').style.display='block';if(!err)document.getElementById('name-input').focus();err=true;}
-  if(err)return;
-
-  const btn=document.getElementById('submit-btn');
-  btn.disabled=true;
-  btn.classList.add('loading');
+function getStatus(name, school) {
+  const personRecs = records.filter(r => {
+    const rname = String(r['姓名'] || '').trim();
+    const rschool = String(r['學校'] || '').trim();
+    return rname === name.trim() && rschool.includes(school.replace('大學', ''));
+  });
   
-  try {
-    await fetch(API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({
-        name: name,
-        school: school || '—',
-        role: role,
-        action: action === 'in' ? '簽到' : '簽退'
-      })
-    });
-    showSuccess(name);
-  } catch(e) {
-    btn.disabled=false;
-    btn.classList.remove('loading');
-    const el = document.getElementById('err-name');
-    el.textContent = '網路錯誤，請重試';
-    el.style.display = 'block';
+  if (!personRecs.length) return {status: 'absent', time: ''};
+
+  const latest = personRecs[personRecs.length - 1];
+  const action = String(latest['動作'] || latest['action'] || '');
+  const time = String(latest['時間'] || '');
+  
+  if (action === '簽退') return {status: 'out', time};
+  if (action === '簽到') return {status: 'in', time};
+  return {status: 'absent', time: ''};
+}
+
+function render() {
+  const roster = activeSchool === '全部' ? ROSTER : ROSTER.filter(r => r.school === activeSchool);
+
+  const bySchool = {};
+  roster.forEach(p => {
+    if(!bySchool[p.school]) bySchool[p.school] = {}; 
+    if(!bySchool[p.school][p.group]) bySchool[p.school][p.group] = [];
+    bySchool[p.school][p.group].push(p);
+  });
+
+  let totalIn = 0, totalOut = 0, totalAbs = 0;
+  roster.forEach(p => {
+    const {status} = getStatus(p.name, p.school);
+    if(status === 'in') totalIn++;
+    else if(status === 'out') totalOut++;
+    else totalAbs++;
+  });
+  document.getElementById('s-total').textContent = roster.length;
+  document.getElementById('s-in').textContent = totalIn;
+  document.getElementById('s-out').textContent = totalOut;
+  document.getElementById('s-abs').textContent = totalAbs;
+  document.getElementById('s-rate').textContent = roster.length > 0 ? Math.round((totalIn + totalOut) / roster.length * 100) + '%' : '0%';
+
+  const content = document.getElementById('content');
+  let html = '<div class="groups-wrap">';
+
+  for (const school of Object.keys(bySchool)) {
+    for (const group of Object.keys(bySchool[school])) {
+      const members = bySchool[school][group];
+      let gIn = 0, gOut = 0, gAbs = 0;
+      members.forEach(p => {
+        const {status} = getStatus(p.name, p.school);
+        if(status === 'in') gIn++;
+        else if(status === 'out') gOut++;
+        else gAbs++;
+      });
+
+      html += `<div class="group-card">
+        <div class="group-hdr">
+          <div>
+            <div class="group-name">${activeSchool === '全部' ? `<span style="color:var(--orange);font-size:11px;margin-right:6px">${school}</span>` : ''}${group}</div>
+          </div>
+          <div class="group-stats">
+            <span class="gs-in">✓ ${gIn}</span>
+            <span class="gs-out">↩ ${gOut}</span>
+            <span class="gs-absent">✕ ${gAbs}</span>
+          </div>
+        </div>
+        <div class="person-list">`;
+
+      members.forEach(p => {
+        const {status, time} = getStatus(p.name, p.school);
+        const badge = status === 'in'
+          ? `<span class="badge b-in">✓ 已簽到</span>`
+          : status === 'out'
+          ? `<span class="badge b-out">↩ 已簽退</span>`
+          : `<span class="badge b-absent">✕ 未到</span>`;
+        const timeEl = time ? `<div class="p-time">⏱ ${time}</div>` : '';
+        
+        html += `<div class="person">
+          <div class="p-name">${p.name}</div>
+          <div class="p-status">${badge}</div>
+          ${timeEl}
+        </div>`;
+      });
+
+      html += `</div></div>`;
+    }
   }
+  html += '</div>';
+  content.innerHTML = html;
 }
 
-function showSuccess(name){
-  const now=new Date();
-  const t=now.toLocaleString('zh-TW',{month:'long',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
-  const isIn=action==='in';
-  document.getElementById('suc-icon').className='suc-icon '+(isIn?'in':'out');
-  document.getElementById('suc-icon').textContent=isIn?'✓':'👋';
-  document.getElementById('suc-title').textContent=isIn?'簽到成功！':'簽退成功！';
-  document.getElementById('suc-name').className='suc-name '+(isIn?'in':'out');
-  document.getElementById('suc-name').textContent=name;
-  const meta=role+(school?' · '+school:'');
-  document.getElementById('suc-meta').textContent=meta;
-  document.getElementById('suc-time').textContent='⏱ '+t;
-  document.getElementById('form-screen').style.display='none';
-  document.getElementById('success-screen').style.display='block';
+async function loadData() {
+  const lb = document.getElementById('lb');
+  const btn = document.getElementById('ref-btn');
+  lb.classList.add('on'); btn.classList.add('spin');
+  try {
+    const res = await fetch(API + '?t=' + Date.now());
+    const data = await res.json();
+    if (data.status === 'ok') {
+      records = data.records;
+      render();
+      document.getElementById('last-upd').textContent = '更新 ' + new Date().toLocaleTimeString('zh-TW', {hour12: false});
+    }
+  } catch(e) {
+    document.getElementById('last-upd').textContent = '載入失敗';
+  }
+  lb.classList.remove('on'); btn.classList.remove('spin');
 }
 
-function resetForm(){
-  role='';school='';action='in';
-  document.querySelectorAll('.role-btn,.school-btn').forEach(b=>b.classList.remove('selected'));
-  document.getElementById('school-section').style.display='none';
-  document.getElementById('act-in').className='opt-btn sel-in';
-  document.getElementById('act-out').className='opt-btn';
-  document.getElementById('submit-btn').className='btn-submit mode-in';
-  document.getElementById('btn-text').textContent='確認簽到 →';
-  document.getElementById('name-input').value='';
-  document.getElementById('name-input').className='';
-  ['err-role','err-school','err-name'].forEach(id=>document.getElementById(id).style.display='none');
-  const btn=document.getElementById('submit-btn');btn.disabled=false;btn.classList.remove('loading');
-  document.getElementById('form-screen').style.display='block';
-  document.getElementById('success-screen').style.none';
-  document.getElementById('success-screen').style.display='none';
+function exportXlsx() {
+  const rows = [['姓名','學校','組別','出席狀態','時間']];
+  ROSTER.forEach(p => {
+    const {status, time} = getStatus(p.name, p.school);
+    rows.push([p.name, p.school, p.group,
+      status === 'in' ? '已簽到' : status === 'out' ? '已簽退' : '未到',
+      time || ''
+    ]);
+  });
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{wch:10},{wch:10},{wch:16},{wch:8},{wch:12}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, '出席報表');
+  XLSX.writeFile(wb, `出席報表_${new Date().toLocaleDateString('zh-TW').replace(/\//g,'-')}.xlsx`);
 }
+
+buildTabs();
+render();
+loadData();
+setInterval(loadData, 30000);
 </script>
 </body>
 </html>
